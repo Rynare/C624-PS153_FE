@@ -40,7 +40,7 @@ class App {
       doAction = () => renderView("/pages/404.html");
     }
     doAction();
-    if (filteredRoutes[0].request.parameter.length > 0) {
+    if (parseInt(filteredRoutes[0]?.request.parameter.length, 10) > 0) {
       filteredRoutes[0].request.putParameter();
     }
   }
@@ -85,8 +85,8 @@ class App {
     document.addEventListener("click", (evt) => {
       const { target } = evt;
       const isLinkRouter = target.getAttribute("is") === "link-router";
-      const isStartWithTag = target.getAttribute("href").startWith("#");
-      const isAnchor = target.target.tagName === "A";
+      const isStartWithTag = (target.getAttribute("href")?.startsWith("#")) === true;
+      const isAnchor = (target?.tagName === "A") === true;
 
       if (isAnchor && isStartWithTag && !isLinkRouter) {
         evt.preventDefault();
