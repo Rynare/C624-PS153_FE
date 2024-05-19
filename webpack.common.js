@@ -13,6 +13,7 @@ require("dotenv").config()
 module.exports = {
     entry: {
         index: path.resolve(__dirname, "src/index.js"),
+        style: path.resolve(__dirname, "src/styles/style.min.js"),
         serviceWorkerHandler: path.resolve(__dirname, "src/utils/ServiceWorker/ServiceWorkerHandler.js"),
     },
     output: {
@@ -55,7 +56,7 @@ module.exports = {
             patterns: [
                 {
                     from: path.resolve(__dirname, "src/public/"),
-                    to: path.resolve(__dirname, "dist/"),
+                    to: path.resolve(__dirname, "dist/public/"),
                 },
                 {
                     from: path.resolve(__dirname, "src/views/"),
