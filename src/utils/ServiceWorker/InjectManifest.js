@@ -1,25 +1,31 @@
 import { precacheAndRoute } from "workbox-precaching";
 import { registerRoute, Route } from "workbox-routing";
 import { StaleWhileRevalidate } from "workbox-strategies";
+import { CacheThisURL } from "./CacheThisURL.js";
 
-const API_ENDPOINT = process.env.API_ENDPOINT;
-const cacheName = new URL(API_ENDPOINT).host;
 // Do precaching
 precacheAndRoute(self.__WB_MANIFEST);
 
-const cacheThisUrl = [
-  `${API_ENDPOINT}/`,
-];
-
 function isCacheable(url) {
   const theUrl = url.endsWith("/") ? url : `${url}/`;
-  return cacheThisUrl.includes(theUrl);
+  return CacheThisURL.find((cursor) => {
+    if (theUrl.startsWith(cursor.host)) {
+      const result = cursor.path.find((path) => {
+        if (theUrl.startsWith(cursor.host + path)) {
+          return true;
+        }
+        return false;
+      });
+      return result;
+    }
+    return false;
+  });
 }
 
 const backendAPI = new Route(
   ({ url }) => isCacheable(url.href),
   new StaleWhileRevalidate({
-    cacheName,
+    cacheName: process.env.HOST,
   }),
 );
 
