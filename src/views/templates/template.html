@@ -8,9 +8,52 @@
         <%= htmlWebpackPlugin.options.title %>
     </title>
 </head>
+</head>
 
 <body>
-    <div id="app"></div>
+    <div class="container-fluid">
+        <nav class="d-flex justify-content-between align-items-center ">
+            <a class="web-logo placeholder-glow rounded-circle overflow-hidden" is="link-router" href="/home">
+                <img alt="" width="44" height="44" class="placeholder  bg-secondary rounded-circle overflow-hidden">
+            </a>
+            <div class="hamburger d-md-none button" tabindex="0">
+                <i class="bi bi-list"></i>
+            </div>
+            <div class="d-flex flex-column position-fixed nav-mobile row-gap-1 ps-3 d-md-none">
+                <a href="/home" is="link-router" class="button nav-link d-flex align-items-center ">Home</a>
+                <a href="/kuliner" is="link-router" class="button nav-link  d-flex align-items-center ">Kuliner</a>
+                <a href="/resep" is="link-router" class="button nav-link  d-flex align-items-center ">Resep</a>
+                <div class="dropdown mt-auto w-100">
+                    <a class="btn dropdown-toggle bg-transparent border-0 justify-content-start d-flex align-items-center column-gap-1"
+                        href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle" style="font-size: 32px;"></i>
+                        <span id="signin-username" class="me-auto">Hallo</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="d-none d-md-flex align-items-center nav-desktop position-relative column-gap-2 ">
+                <a href="/home" is="link-router" class="nav-link button px-2 "><span>Home</span></a>
+                <a href="/kuliner" is="link-router" class="nav-link button px-2 "><span>Kuliner</span></a>
+                <a href="/resep" is="link-router" class="nav-link button px-2 "><span>Resep</span></a>
+                <div class="dropdown">
+                    <a class="btn dropdown-toggle d-flex align-items-center column-gap-1 py-0" href="#" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle" style="font-size: 22px;"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Masuk</a></li>
+                        <li><a class="dropdown-item" href="#">Keluar</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div id="app"></div>
+    </div>
 </body>
 
 </html>
