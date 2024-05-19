@@ -13,8 +13,8 @@ class LinkRouter extends HTMLAnchorElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === "href" && newValue && !newValue.startsWith("#")) {
-      this.setAttribute(name, `#${newValue}`);
+    if (name === "href" && newValue && !newValue.startsWith("#") && !newValue.endsWith("/")) {
+      this.setAttribute(name, `#${newValue}/`);
     }
   }
 }
