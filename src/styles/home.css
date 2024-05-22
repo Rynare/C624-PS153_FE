@@ -1,17 +1,3 @@
-.home-container .hero-img-wrapper img {
-    aspect-ratio: 1.5/1;
-    width: 100vw;
-}
-
-.home-container .hero-img-wrapper {
-    max-width: 100vw;
-    overflow: hidden;
-}
-
-.home-container .hero-content-wrapper {
-    background-color: rgb(133 122 101 / 50%);
-}
-
 .home-container :is(.popular-recipes, .popular-articles) .card {
     flex-shrink: 0;
 }

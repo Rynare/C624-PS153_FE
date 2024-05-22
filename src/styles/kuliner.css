@@ -1,0 +1,61 @@
+.kuliner-container .new-post-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 8px;
+}
+
+.kuliner-container .new-post-btn::before {
+    content: "+"
+}
+
+.kuliner-container .search-bar {
+    background-color: #252931;
+    display: flex;
+    border-radius: 20px;
+    padding: 4px 10px;
+}
+
+.kuliner-container .search-bar:focus-within {
+    outline: 0.5px solid #8ab4f8;
+}
+
+.kuliner-container .search-bar .search-input {
+    outline: none;
+    border: none;
+    color: rgba(255, 255, 255, .87);
+    background-color: transparent;
+    flex-grow: 1;
+    caret-color: #8ab4f8;
+    padding-left: 0.8rem;
+    padding-right: 0.5rem;
+}
+
+.kuliner-container .search-bar .search-input::placeholder {
+    color: #e8eaed;
+}
+
+.kuliner-container .search-bar .search-btn {
+    background-color: transparent;
+    outline: none;
+    border: none;
+    color: white;
+}
+
+.kuliner-container .search-bar .search-btn:focus-visible {
+    outline: 0.5px solid #8ab4f8;
+}
+
+.kuliner-container picture:not(.placeholder) img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.kuliner-container button[is=switch-button] {
+    background-color: transparent;
+    outline: none;
+    border: none;
+    color: red;
+}

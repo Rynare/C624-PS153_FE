@@ -3,7 +3,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { App } from "./app/App.js";
-import "./app/components/Link-Router.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const app = new App();

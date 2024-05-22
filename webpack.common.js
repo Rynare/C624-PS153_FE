@@ -14,6 +14,7 @@ module.exports = {
     entry: {
         index: path.resolve(__dirname, "src/index.js"),
         style: path.resolve(__dirname, "src/styles/style.min.js"),
+        components: path.resolve(__dirname, "src/app/components/component.min.js"),
         serviceWorkerHandler: path.resolve(__dirname, "src/utils/ServiceWorker/ServiceWorkerHandler.js"),
     },
     output: {
