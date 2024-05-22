@@ -42,12 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector(`.nav-desktop a[href*='${hrefForSearchingComponent}']`).classList.add("active");
   });
 
-  const hamburger = document.querySelector(".hamburger");
-  const mobileNav = document.querySelector(".nav-mobile");
-  hamburger.addEventListener("click", () => {
-    mobileNav.classList.toggle("nav-mobile-active");
-  });
-
   function disableActiveNav() {
     const actives = document.querySelectorAll(".nav-desktop a.nav-link.active");
     if (actives) {
@@ -56,4 +50,25 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   }
+
+  let prevScrollpos = window.pageYOffset;
+  let scrUpVal = 0;
+  window.onscroll = () => {
+    const minScroll = document.querySelector("nav").clientHeight;
+    const currentScrollPos = window.pageYOffset;
+    if (currentScrollPos >= minScroll) {
+      if (prevScrollpos > currentScrollPos) {
+        document.querySelector("nav").style.top = "0";
+        scrUpVal = 0;
+      } else {
+        if (scrUpVal <= minScroll) {
+          scrUpVal += minScroll * 0.1;
+        }
+        document.querySelector("nav").style.top = `-${scrUpVal}px`;
+      }
+      prevScrollpos = currentScrollPos;
+    } else {
+      document.querySelector("nav").style.top = "0";
+    }
+  };
 });

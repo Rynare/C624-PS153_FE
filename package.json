@@ -21,6 +21,7 @@
     "firebase": "^10.11.1",
     "firebaseui": "^6.1.0",
     "idb": "^8.0.0",
+    "jquery": "^3.7.1",
     "workbox-precaching": "^7.1.0",
     "workbox-routing": "^7.1.0",
     "workbox-strategies": "^7.1.0"
