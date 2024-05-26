@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@selectize/selectize": "^0.15.2",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "dotenv": "^16.4.5",
@@ -22,6 +23,7 @@
     "firebaseui": "^6.1.0",
     "idb": "^8.0.0",
     "jquery": "^3.7.1",
+    "quill": "^2.0.2",
     "workbox-precaching": "^7.1.0",
     "workbox-routing": "^7.1.0",
     "workbox-strategies": "^7.1.0"
@@ -43,6 +45,7 @@
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "expose-loader": "^5.0.0",
     "favicons-webpack-plugin": "^6.0.1",
     "globals": "^15.2.0",
     "html-webpack-plugin": "^5.6.0",

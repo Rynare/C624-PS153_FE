@@ -1,7 +1,4 @@
 // eslint-disable-next-line import/named
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.js";
-import "bootstrap-icons/font/bootstrap-icons.css";
 import { App } from "./app/App.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -32,13 +29,13 @@ document.addEventListener("DOMContentLoaded", () => {
     disableActiveNav();
 
     const hrefForSearchingComponent = getBaseUrl(new URL(window.location.href).hash);
-    document.querySelector(`.nav-desktop a[href*='${hrefForSearchingComponent}']`).classList.add("active");
+    document.querySelector(`.nav-desktop a[href*='${hrefForSearchingComponent}']`)?.classList.add("active");
   });
 
   window.addEventListener("load", async () => {
     await app.renderPage();
     const hrefForSearchingComponent = getBaseUrl(new URL(window.location.href).hash);
-    document.querySelector(`.nav-desktop a[href*='${hrefForSearchingComponent}']`).classList.add("active");
+    document.querySelector(`.nav-desktop a[href*='${hrefForSearchingComponent}']`)?.classList.add("active");
   });
 
   function disableActiveNav() {
@@ -70,4 +67,13 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelector("nav").style.top = "0";
     }
   };
+
+  const offCanvasAnchorWrapper = document.querySelector("#nav-mobile-offcanvas .offcanvas-body .nav-mobile");
+  offCanvasAnchorWrapper.addEventListener("click", (evt) => {
+    const { target } = evt;
+    if (target.tagName === "A" && target.getAttribute("is") === "link-router") {
+      const offCanvasCloseBtn = document.querySelector("#nav-mobile-offcanvas .offcanvas-header .btn-close");
+      offCanvasCloseBtn.click();
+    }
+  });
 });

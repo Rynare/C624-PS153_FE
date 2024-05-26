@@ -1,3 +1,6 @@
+import Quill from "quill";
+import $ from "jquery";
+import "@selectize/selectize";
 import { Controller } from "./Controller.js";
 
 class KulinerController extends Controller {
@@ -40,6 +43,48 @@ class KulinerController extends Controller {
         </div>
       `;
     }
+    const toolbarOptions = [
+      // [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      [{ font: [] }],
+      [{ size: ["small", false, "large", "huge"] }],
+      ["bold", "italic", "underline", "strike"],
+      ["blockquote"],
+
+      [{ align: [] }],
+      [{ indent: "-1" }, { indent: "+1" }],
+
+      [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
+      [{ color: [] }, { background: [] }],
+      // [{ script: "sub" }, { script: "super" }],
+
+      ["link", "image", "video"],
+      ["clean"],
+    ];
+    const options = {
+      debug: "info",
+      modules: {
+        toolbar: toolbarOptions,
+      },
+      placeholder: "Masukkan Deskripsimu disini...",
+      theme: "snow",
+    };
+    const quill = new Quill("#deskripsi-lengkap-editor", options);
+    $("#select-tools").selectize({
+      maxItems: null,
+      valueField: "id",
+      labelField: "title",
+      searchField: "title",
+      options: [
+        { id: 1, title: "Spectrometer", url: "http://en.wikipedia.org/wiki/Spectrometers" },
+        { id: 2, title: "Star Chart", url: "http://en.wikipedia.org/wiki/Star_chart" },
+        { id: 3, title: "Electrical Tape", url: "http://en.wikipedia.org/wiki/Electrical_tape" },
+      ],
+      create: false,
+    });
+  }
+
+  async detail() {
+    await this.view("/pages/kuliner-detail.html");
   }
 }
 
