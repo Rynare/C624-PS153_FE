@@ -1,0 +1,66 @@
+<div class="kuliner-detail-container text-white px-3 px-sm-4 px-md-5" style="margin-top: calc(52px + 10px);">
+    <h2 class="text-center">Title</h2>
+    <picture class="hero-detail-img w-100 placeholder-wave d-block overflow-hidden rounded mb-1"
+        style="aspect-ratio: 1.84/1;">
+        <img alt="" class="w-100 object-fit-cover placeholder bg-secondary  "
+            style="aspect-ratio: 1.84/1; object-position: center; ">
+    </picture>
+    <div class="kuliner-detail-body px-2">
+        <div class="kuliner-detail-body-header d-flex justify-content-between align-items-center">
+            <small class="author-name"><i>By:&nbsp;<span>Your Name</span></i></small>
+            <span class="ms-1 d-flex align-items-center gap-1">
+                <button is="switch-button" class="like-btn">
+                    <i class="bi bi-heart inactive"></i>
+                    <i class="bi bi-heart-fill active"></i>
+                </button>
+                <span class="like-count text-white bg-transparent pb-1">
+                    0
+                </span>
+            </span>
+        </div>
+        <div class="kuliner-detail-body-description mt-1 mb-3">
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eos praesentium nesciunt error magni molestias vel
+            provident quos dolorem in vero nihil, deserunt natus, odio voluptate sunt asperiores a quam voluptas.
+        </div>
+        <div class="kuliner-detail-body-comment">
+            <div class="comment-header border-bottom d-flex align-items-center mb-2 justify-content-between px-1 pb-2">
+                <p class="mb-0">
+                    <span class="comment-count">0</span>
+                    &nbsp;Komentar
+                </p>
+                <div class="account">
+                    <button class="btn btn-outline-success bg-success-subtle pt-1">Masuk</button>
+                    <span class="d-none">Welcome, <span class="account-name"></span></span>
+                </div>
+            </div>
+            <div class="new-comment d-flex mb-2">
+                <picture class="bg-white placeholder-wave w-25 overflow-hidden rounded-circle d-none d-sm-block"
+                    style="aspect-ratio: 1/1; height: 100%; min-width: 52px;max-width: 52px;">
+                    <img alt="" class="placeholder w-25">
+                </picture>
+
+                <div class="new-comment-editor-container bg-white text-black rounded overflow-hidden flex-grow-1 ms-2">
+                    <div id="komentar-editor">
+                    </div>
+                </div>
+            </div>
+
+            <div class="comment-sub-header mb-2">
+                <form class="d-flex column-gap-2 justify-content-end ">
+                    <div class="comment-sort-by">
+                        <input type="radio" name="sort-by" value="terbaru" id="terbaru" class="d-none" checked>
+                        <label for="terbaru">Terbaru</label>
+                    </div>
+                    <div class="comment-sort-by">
+                        <input type="radio" name="sort-by" value="terlama" id="terlama" class="d-none">
+                        <label for="terlama">Terlama</label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="comment-container d-flex flex-column row-gap-2 ">
+
+            </div>
+        </div>
+    </div>
+</div>

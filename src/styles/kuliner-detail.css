@@ -1,0 +1,5 @@
+input[type=radio]:checked~label {
+    color: rgb(0, 0, 221);
+    border-bottom: 2px solid rgb(0, 0, 221);
+    font-weight: bold;
+}
