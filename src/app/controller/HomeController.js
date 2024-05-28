@@ -8,6 +8,8 @@ class HomeController extends Controller {
   async index() {
     await this.view("/pages/home.html");
 
+    document.querySelector(".hero-container").classList.remove("d-none");
+
     const heroTitle = document.querySelector(".hero-content-wrapper h2");
     const heroText = document.querySelector(".hero-content-wrapper p");
     heroTitle.innerHTML = "Qulinery";
@@ -18,11 +20,11 @@ class HomeController extends Controller {
     for (let amount = 1; amount <= 10; amount++) {
       articleSlider.innerHTML += `
         <div class="card placeholder-wave">
-            <div class="placeholder" style="aspect-ratio: 3/2; width: 30vw;"></div>
+            <div class="placeholder" style="aspect-ratio: 3/2; width: 30vw;max-width: 220px;"></div>
         </div>`;
       recipeSlider.innerHTML += `
         <div class="card placeholder-wave">
-            <div class="placeholder" style="aspect-ratio: 3/2; width: 30vw;"></div>
+            <div class="placeholder" style="aspect-ratio: 3/2; width: 30vw;max-width: 220px;"></div>
         </div>`;
     }
   }

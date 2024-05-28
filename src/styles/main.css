@@ -4,13 +4,14 @@
 }
 
 body>nav {
-    height: 48px;
-    max-height: 48px;
+    height: 52px;
+    max-height: 52px;
     position: fixed;
     top: 0;
     transition: top 0.3s;
     box-shadow: 0 1px 5px 0px;
     background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
 }
 
 body>nav .nav-backdrop {
@@ -113,9 +114,14 @@ body::-webkit-scrollbar-thumb {
 /* Handle on hover */
 body::-webkit-scrollbar-thumb:hover {}
 
+/**================== Hero Style ==================**/
+
 .hero-img-wrapper img {
-    aspect-ratio: 1.5/1;
     width: 100vw;
+    object-fit: cover;
+    object-position: center;
+    /* max-height: calc(50vh + 52px); */
+    max-height: calc(280px + 52px);
 }
 
 .hero-img-wrapper {
@@ -125,4 +131,13 @@ body::-webkit-scrollbar-thumb:hover {}
 
 .hero-content-wrapper {
     background-color: rgb(133 122 101 / 50%);
+}
+
+/**================================================**/
+
+button[is=switch-button].like-btn {
+    background-color: transparent;
+    outline: none;
+    border: none;
+    color: red;
 }

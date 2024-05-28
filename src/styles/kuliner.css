@@ -14,6 +14,7 @@
     display: flex;
     border-radius: 20px;
     padding: 4px 10px;
+    min-width: 0;
 }
 
 .kuliner-container .search-bar:focus-within {
@@ -21,14 +22,15 @@
 }
 
 .kuliner-container .search-bar .search-input {
+    min-width: 0;
     outline: none;
     border: none;
     color: rgba(255, 255, 255, .87);
     background-color: transparent;
     flex-grow: 1;
     caret-color: #8ab4f8;
-    padding-left: 0.8rem;
-    padding-right: 0.5rem;
+    margin-left: 0.8rem;
+    margin-right: 0.5rem;
 }
 
 .kuliner-container .search-bar .search-input::placeholder {
@@ -51,11 +53,4 @@
     height: 100%;
     object-fit: cover;
     object-position: center;
-}
-
-.kuliner-container button[is=switch-button] {
-    background-color: transparent;
-    outline: none;
-    border: none;
-    color: red;
 }

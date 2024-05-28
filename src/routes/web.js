@@ -12,7 +12,7 @@ const routes = [
   router("/", [new HomeController(), "index"]),
   router("/home", [new HomeController(), "index"]),
   router("/kuliner", [new KulinerController(), "index"]),
-  router("/kuliner", [new KulinerController(), "detail"]),
+  router("/kuliner-detail/:id", [new KulinerController(), "detail"]),
   router("/resep", [new ResepController(), "index"]),
   router("/example", [new LoginController(), "index"]),
   router("/quill", [new TestQuillController(), "index"]),
