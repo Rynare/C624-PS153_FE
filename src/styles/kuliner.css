@@ -54,3 +54,11 @@
     object-fit: cover;
     object-position: center;
 }
+
+.kuliner-container .article-card {
+    max-width: 348px;
+}
+
+.kuliner-container .article-card .card-thumbnail :is(picture, .article-thumbnail) {
+    width: -webkit-fill-available;
+}

@@ -19,32 +19,18 @@ class KulinerController extends Controller {
     heroText.innerHTML = "Bagikan cerita tentang pengalaman kulinermu disini.";
 
     const kulinerPostList = document.querySelector(".kuliner-post-list");
-    for (let amount = 1; amount < 10; amount++) {
-      kulinerPostList.innerHTML += `
-        <div class="post-card placeholder-wave col p-1">
-            <picture class="placeholder w-100 bg-white mb-2 rounded overflow-hidden" style="aspect-ratio: 1.28/1;">
-                <img src="" alt="" width="100%">
-            </picture>
-            <div class="card-header d-flex justify-content-between row gx-0">
-                <h5 class="placeholder bg-white col-8 mb-0"></h5>
-                <span class="col ms-1 d-flex align-items-center gap-1">
-                    <button is="switch-button" class="like-btn">
-                        <i class="bi bi-heart inactive"></i>
-                        <i class="bi bi-heart-fill active"></i>
-                    </button>
-                    <span class="like-count text-white bg-transparent pb-1">
-                        0
-                    </span>
-                </span>
-            </div>
-            <div class="card-body">
-                <div class="placeholder excerpt bg-white w-100"></div>
-                <div class="placeholder excerpt bg-white w-100"></div>
-                <div class="placeholder excerpt bg-white w-100"></div>
-            </div>
-        </div>
-      `;
-    }
+    $.get(`${process.env.API_ENDPOINT}/api/articles/page/1`).done((response) => {
+      kulinerPostList.innerHTML = "";
+      const { results } = response;
+      results.forEach((result) => {
+        const resultStr = JSON.stringify(result);
+        const topArticleCard = document.createElement("div", { is: "article-card" });
+        topArticleCard.classList.add(..."article-card overflow-hidden rounded col p-1".split(" "));
+        topArticleCard.setAttribute("json-data", resultStr);
+        kulinerPostList.appendChild(topArticleCard);
+      });
+    });
+
     const toolbarOptions = [
       // [{ header: [1, 2, 3, 4, 5, 6, false] }],
       [{ font: [] }],
