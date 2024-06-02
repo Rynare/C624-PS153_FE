@@ -133,6 +133,20 @@ body::-webkit-scrollbar-thumb:hover {}
     background-color: rgb(133 122 101 / 50%);
 }
 
+.hero-content-wrapper>* {
+    filter: drop-shadow(2px 4px 6px black);
+}
+
+.hero-content-wrapper>p {
+    font-size: 3.7vw;
+}
+
+@media screen and (min-width: 500px) {
+    .hero-content-wrapper>p {
+        font-size: 1.18rem;
+    }
+}
+
 /**================================================**/
 
 button[is=switch-button].like-btn {
