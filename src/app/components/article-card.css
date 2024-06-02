@@ -1,6 +1,5 @@
 .article-card {
     flex-shrink: 0;
-    width: min-content;
 }
 
 .article-card .card-thumbnail {
@@ -11,7 +10,6 @@
 .article-card .card-thumbnail :is(picture, .article-thumbnail) {
     aspect-ratio: 348 / 196;
     width: 348px;
-    max-width: 80vw;
 }
 
 .article-card .card-thumbnail .article-thumbnail {

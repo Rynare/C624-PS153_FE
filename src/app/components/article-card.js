@@ -5,7 +5,7 @@ const template = document.createElement("template");
 template.innerHTML = /* html */`
     <div class="card-thumbnail">
         <picture>
-            <img src="" alt="" class="article-thumbnail">
+            <img src="" alt="" class="article-thumbnail rounded">
         </picture>
         <div class="card-sub-thumbnail px-3 py-2 p-sm-3">
         </div>
