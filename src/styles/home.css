@@ -1,3 +1,11 @@
 .home-container :is(.popular-recipes, .popular-articles) .card {
     flex-shrink: 0;
 }
+
+.home-container .article-card {
+    width: min-content;
+}
+
+.home-container .article-card .card-thumbnail :is(picture, .article-thumbnail) {
+    max-width: 80vw;
+}
