@@ -9,21 +9,20 @@
     position: relative;
 }
 
-.recipe-card .card-header picture {
+.recipe-card .card-header :is(picture, .recipe-thumbnail) {
     aspect-ratio: 3/2;
     display: block;
     overflow: hidden;
     max-width: 220px;
     min-width: 220px;
+    width: 100%;
     filter: drop-shadow(0px 0px 3px black);
 }
 
 .recipe-card .card-header picture .recipe-thumbnail {
-    aspect-ratio: 3/2;
     object-fit: cover;
     object-position: center;
-    width: 100%;
-    transition: transform ease-in-out 300ms, filter ease-in-out 300ms;
+    transition: transform ease-in-out 200ms, filter ease-in-out 200ms;
     filter: brightness(.9);
 }
 

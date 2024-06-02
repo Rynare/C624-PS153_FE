@@ -14,7 +14,7 @@ template.innerHTML = `
     </div>
     <div class="card-body my-2 mx-2">
         <div class="recipe-header px-1 mb-2 border-bottom border-subtle">
-            <h6 class="recipe-name">Nama resep</h6>
+            <h6 class="recipe-name pb-1">Nama resep</h6>
         </div>
         <div class="recipe-sub-header d-flex flex-column row-gap-1 mx-2 mb-3 small">
             <div class="fw-semibold recipe-duration">
@@ -80,17 +80,17 @@ class RecipeCard extends HTMLDivElement {
       hard: "Sulit",
     };
     switch (difficulty) {
-    case "easy":
-      diffColor = "success";
-      break;
-    case "medium":
-      diffColor = "warning";
-      break;
-    case "hard":
-      diffColor = "danger";
-      break;
-    default:
-      break;
+      case "easy":
+        diffColor = "success";
+        break;
+      case "medium":
+        diffColor = "warning";
+        break;
+      case "hard":
+        diffColor = "danger";
+        break;
+      default:
+        break;
     }
     this.querySelector(".recipe-difficulty span").textContent = diffText[difficulty];
     this.querySelector(".recipe-difficulty").classList.add(`text-${diffColor}`);
@@ -98,17 +98,17 @@ class RecipeCard extends HTMLDivElement {
     if (calories.length >= 1) {
       let caloriesColor;
       switch (calories[0]) {
-      case "low":
-        caloriesColor = "success";
-        break;
-      case "medium":
-        caloriesColor = "warning";
-        break;
-      case "high":
-        caloriesColor = "danger";
-        break;
-      default:
-        break;
+        case "low":
+          caloriesColor = "success";
+          break;
+        case "medium":
+          caloriesColor = "warning";
+          break;
+        case "high":
+          caloriesColor = "danger";
+          break;
+        default:
+          break;
       }
       this.querySelector(".recipe-calories").classList.add(`text-${caloriesColor}`);
       this.querySelector(".recipe-calories span").textContent = calories[1];
