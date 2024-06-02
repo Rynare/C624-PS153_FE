@@ -15,9 +15,9 @@ template.innerHTML = /* html */`
       <a href="" class="nav-link mt-1 mt-sm-2 mb-md-1" is="link-router">
         <h6 class="article-title pb-1 mb-0"></h6>
       </a>
-      <small class="article-author text-bg-danger rounded px-2 pb-1 me-1">
+      <small class="article-author text-bg-danger rounded px-2 pb-0 me-1 text-truncate d-inline-flex mb-0 gap-1">
           <i class="bi bi-person"></i>
-          <span class="small"></span>
+          <span class="small text-truncate"></span>
       </small>
       <div class="article-likes text-danger badge text-bg-light">
           <i class="bi bi-heart-fill"></i>

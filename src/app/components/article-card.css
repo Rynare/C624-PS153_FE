@@ -30,6 +30,15 @@
     top: 0;
 }
 
+.article-card .article-author {
+    width: fit-content;
+    max-width: -webkit-fill-available;
+}
+
+.article-card .article-author span {
+    width: 100%;
+}
+
 .article-card .article-title {
     display: -webkit-box;
     -webkit-line-clamp: 2;
