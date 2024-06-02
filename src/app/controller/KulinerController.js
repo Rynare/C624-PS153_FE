@@ -6,6 +6,7 @@ import { Controller } from "./Controller.js";
 class KulinerController extends Controller {
   constructor() {
     super();
+    this._articleLazyPage = 1;
   }
 
   async index() {
@@ -18,18 +19,18 @@ class KulinerController extends Controller {
     heroTitle.innerHTML = "Qulinery/Post";
     heroText.innerHTML = "Bagikan cerita tentang pengalaman kulinermu disini.";
 
-    const kulinerPostList = document.querySelector(".kuliner-post-list");
-    $.get(`${process.env.API_ENDPOINT}/api/articles/page/1`).done((response) => {
-      kulinerPostList.innerHTML = "";
-      const { results } = response;
-      results.forEach((result) => {
-        const resultStr = JSON.stringify(result);
-        const topArticleCard = document.createElement("div", { is: "article-card" });
-        topArticleCard.classList.add(..."article-card overflow-hidden rounded col p-1".split(" "));
-        topArticleCard.setAttribute("json-data", resultStr);
-        kulinerPostList.appendChild(topArticleCard);
-      });
+    const lazyLoadObserver = new IntersectionObserver((theElements) => {
+      const { target, isIntersecting } = theElements[0];
+      if (isIntersecting && this._articleLazyPage !== "last") {
+        this.renderCard();
+      }
+      if (this._articleLazyPage === "last") {
+        target.classList.add("d-none");
+        document.querySelector(".kuliner-post-body .last-page-message").classList.remove("d-none");
+      }
     });
+
+    lazyLoadObserver.observe(document.querySelector(".kuliner-post-body .kuliner-post-loading"));
 
     const toolbarOptions = [
       // [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -69,6 +70,28 @@ class KulinerController extends Controller {
       ],
       create: false,
     });
+  }
+
+  renderCard() {
+    const kulinerPostList = document.querySelector(".kuliner-post-list");
+    if (this._articleLazyPage === 1) {
+      kulinerPostList.innerHTML = "";
+    }
+    $.get(`${process.env.API_ENDPOINT}/api/articles/page/${this._articleLazyPage}`).done((response) => {
+      const { results } = response;
+      results.forEach((result) => {
+        const resultStr = JSON.stringify(result);
+        const topArticleCard = document.createElement("div", { is: "article-card" });
+        topArticleCard.classList.add(..."article-card overflow-hidden rounded col p-1".split(" "));
+        topArticleCard.setAttribute("json-data", resultStr);
+        kulinerPostList.appendChild(topArticleCard);
+      });
+      if (results.length <= 0) {
+        this._articleLazyPage = "last";
+      }
+    });
+
+    if (this._articleLazyPage !== "last") this._articleLazyPage += 1;
   }
 
   async detail() {
