@@ -1,0 +1,43 @@
+.article-card {
+    flex-shrink: 0;
+    width: min-content;
+}
+
+.article-card .card-thumbnail {
+    position: relative;
+    overflow: hidden;
+}
+
+.article-card .card-thumbnail :is(picture, .article-thumbnail) {
+    aspect-ratio: 348 / 196;
+    width: 348px;
+    max-width: 80vw;
+}
+
+.article-card .card-thumbnail .article-thumbnail {
+    object-fit: cover;
+    object-position: center;
+    transition:
+        transform ease-in-out 200ms,
+        filter ease-in-out 200ms;
+}
+
+.article-card:hover .card-thumbnail .article-thumbnail {
+    transform: scale(1.1);
+    filter: brightness(0.8);
+}
+
+.article-card .card-thumbnail .card-sub-thumbnail {
+    position: absolute;
+    top: 0;
+}
+
+.article-card .article-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    max-width: 100%;
+}
