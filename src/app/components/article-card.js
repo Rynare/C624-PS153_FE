@@ -44,10 +44,9 @@ class ArticleCard extends HTMLDivElement {
 
     this.querySelector(".article-likes span").textContent = `${numberToNotation(likes)} Like`;
     this.querySelector(".article-title").textContent = title;
-    this.querySelector("a").href = `/${slug}`;
     this.querySelector(".article-category").textContent = category.name || "Uncategorized";
     this.querySelector(".article-author span").textContent = author;
-    this.querySelector("a").href = `/${slug}`;
+    this.querySelector("a").href = `/artikel-detail/${slug}`;
   }
 
   static get observedAttributes() {

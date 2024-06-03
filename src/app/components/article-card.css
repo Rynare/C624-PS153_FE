@@ -48,3 +48,7 @@
     white-space: normal;
     max-width: 100%;
 }
+
+.article-card .article-title:hover {
+    text-decoration: underline;
+}
