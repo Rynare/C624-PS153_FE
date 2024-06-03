@@ -11,9 +11,10 @@ const routes = [
   router(404, () => renderView("/pages/404.html")),
   router("/", [new HomeController(), "index"]),
   router("/home", [new HomeController(), "index"]),
-  router("/kuliner", [new KulinerController(), "index"]),
-  router("/kuliner-detail/:id", [new KulinerController(), "detail"]),
+  router("/artikel", [new KulinerController(), "index"]),
+  router("/artikel-detail/:id", [new KulinerController(), "detail"]),
   router("/resep", [new ResepController(), "index"]),
+  router("/resep-detail/:id", [new ResepController(), "index"]),
   router("/example", [new LoginController(), "index"]),
   router("/quill", [new TestQuillController(), "index"]),
 ];

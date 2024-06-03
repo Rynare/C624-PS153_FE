@@ -54,7 +54,7 @@ class RecipeCard extends HTMLDivElement {
       calories, likes,
     } = JSON.parse(this.getAttribute("json-data"));
 
-    this.querySelector(".card-footer a").setAttribute("href", `/recipe/${slug}`);
+    this.querySelector(".card-footer a").setAttribute("href", `/resep-detail/${slug}`);
     this.querySelector(".recipe-name").textContent = title;
     this.querySelector(".recipe-thumbnail").setAttribute("src", thumbnail);
     this.querySelector(".recipe-thumbnail").addEventListener("error", () => {
