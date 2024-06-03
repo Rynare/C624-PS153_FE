@@ -11,6 +11,7 @@ class KulinerController extends Controller {
 
   async index() {
     await this.view("/pages/kuliner.html");
+    this._articleLazyPage = 1;
 
     document.querySelector(".hero-container").classList.remove("d-none");
 
@@ -20,13 +21,9 @@ class KulinerController extends Controller {
     heroText.innerHTML = "Bagikan cerita tentang pengalaman kulinermu disini.";
 
     const lazyLoadObserver = new IntersectionObserver((theElements) => {
-      const { target, isIntersecting } = theElements[0];
+      const { isIntersecting } = theElements[0];
       if (isIntersecting && this._articleLazyPage !== "last") {
         this.renderCard();
-      }
-      if (this._articleLazyPage === "last") {
-        target.classList.add("d-none");
-        document.querySelector(".kuliner-post-body .last-page-message").classList.remove("d-none");
       }
     });
 
@@ -88,6 +85,9 @@ class KulinerController extends Controller {
       });
       if (results.length <= 0) {
         this._articleLazyPage = "last";
+
+        document.querySelector(".kuliner-post-body .kuliner-post-loading").classList.add("d-none");
+        document.querySelector(".kuliner-post-body .last-page-message").classList.remove("d-none");
       }
     });
 
