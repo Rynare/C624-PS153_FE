@@ -19,8 +19,8 @@ class Controller {
   }
 
   async view(viewUrl) {
+    document.body.scrollIntoView({ behavior: "instant" });
     await renderView(viewUrl);
-    document.body.scrollTo(0, 0);
   }
 }
 

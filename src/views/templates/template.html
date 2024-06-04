@@ -48,26 +48,31 @@
                             class="button-44 nav-link  d-flex align-items-center ">Kuliner</a>
                         <a href="/resep" is="link-router"
                             class="button-44 nav-link  d-flex align-items-center ">Resep</a>
-                        <div class="dropdown mt-auto w-100">
+                        <div class="dropdown mt-auto w-100  sign-option">
                             <div class="w-100 d-flex">
-                                <button type="button" class="btn flex-grow-1 d-flex align-items-center">
-                                    <i class="bi bi-person-circle" style="font-size: 32px;"></i>
+                                <button type="button"
+                                    class="btn d-flex flex-grow-1 align-items-center d-none short-info">
+                                    <picture class="profile-picture">
+                                        <img src="" alt="" style="aspect-ratio: 1/1; height: 36px;"
+                                            class="rounded-circle">
+                                    </picture>
                                     <span id="signin-username" class="me-auto ms-3 ms-sm-4">Hallo</span>
                                 </button>
-                                <button type="button" class="btn dropdown-toggle-split" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
+                                <button class="btn btn-outline-success bg-success-subtle pt-1 login-btn">Masuk</button>
+                                <button type="button" class="btn dropdown-toggle-split d-none user-option-btn"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class="">
                                         <i class="bi bi-three-dots-vertical" style="font-size: 20px;"></i>
                                     </span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Action</a></li>
+                                    <!-- <li><a class="dropdown-item" href="#">Action</a></li>
                                     <li><a class="dropdown-item" href="#">Another action</a></li>
                                     <li><a class="dropdown-item" href="#">Something else here</a></li>
                                     <li>
                                         <hr class="dropdown-divider">
-                                    </li>
-                                    <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                    </li> -->
+                                    <li><button class="dropdown-item logout-btn" href="#">Keluar</button></li>
                                 </ul>
                             </div>
                         </div>
@@ -78,16 +83,20 @@
                 <a href="/home" is="link-router" class="nav-link button-44 px-2 "><span>Home</span></a>
                 <a href="/artikel" is="link-router" class="nav-link button-44 px-2 "><span>Kuliner</span></a>
                 <a href="/resep" is="link-router" class="nav-link button-44 px-2 "><span>Resep</span></a>
-                <div class="dropdown">
-                    <a class="btn align-items-center column-gap-1 py-0" href="#" role="button" data-bs-toggle="dropdown"
-                        aria-expanded="false" style="display: none;">
-                        <i class="bi bi-person-circle" style="font-size: 22px;"></i>
+                <div class="dropdown sign-option">
+                    <button class="btn btn-outline-success bg-success-subtle pt-1 login-btn">Masuk</button>
+                    <a class="btn align-items-center column-gap-1 py-0 user-option-btn" href="#" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <picture class="profile-picture">
+                            <img src="" alt="" style="aspect-ratio: 1/1; height: 36px;" class="rounded-circle">
+                        </picture>
                     </a>
-                    <button class="btn btn-outline-success bg-success-subtle pt-1">Masuk</button>
                     <ul class="dropdown-menu">
-                        <li><button class="dropdown-item" data-bs-toggle="modal"
-                                data-bs-target="#signin-modal">Masuk</button></li>
-                        <li><a class="dropdown-item" href="#">Keluar</a></li>
+                        <!-- <li><button class="dropdown-item" data-bs-toggle="modal"
+                                data-bs-target="#signin-modal">Masuk</button></li> -->
+                        <li><button class="dropdown-item logout-btn">
+                                Keluar
+                            </button></li>
                     </ul>
                 </div>
             </div>
