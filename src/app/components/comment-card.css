@@ -1,0 +1,9 @@
+.comment-items :is(picture, img) {
+    aspect-ratio: 1/1;
+    height: 100%;
+    width: 52px;
+}
+
+.comment-items .comment-username {
+    line-height: 1rem;
+}
