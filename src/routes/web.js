@@ -10,9 +10,9 @@ const routes = [
   router("/", [new HomeController(), "index"]),
   router("/home", [new HomeController(), "index"]),
   router("/artikel", [new KulinerController(), "index"]),
-  router("/artikel-detail/:id", [new KulinerController(), "detail"]),
+  router("/artikel-detail/:slug", [new KulinerController(), "detail"]),
   router("/resep", [new ResepController(), "index"]),
-  router("/resep-detail/:id", [new ResepController(), "index"]),
+  router("/resep-detail/:slug", [new ResepController(), "index"]),
 ];
 
 export { routes };

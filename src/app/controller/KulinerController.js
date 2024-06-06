@@ -1,12 +1,15 @@
 import Quill from "quill";
 import $ from "jquery";
 import "@selectize/selectize";
+import moment from "moment";
 import { Controller } from "./Controller.js";
+import { numberToNotation } from "../../utils/helper/number-to-notation.js";
 
 class KulinerController extends Controller {
   constructor() {
     super();
     this._articleLazyPage = 1;
+    this._articleLazyComment = 1;
   }
 
   async index() {
@@ -95,9 +98,37 @@ class KulinerController extends Controller {
   }
 
   async detail() {
+    this._articleLazyComment = 1;
     await this.view("/pages/kuliner-detail.html");
 
     document.querySelector(".hero-container").classList.add("d-none");
+
+    $.get(`${process.env.API_ENDPOINT}/api/article/detail/${Controller.parameters.slug}`).done((response) => {
+      const { results } = response;
+      const {
+        author, datepublished, category: { name: categoryName }, description,
+        thumbnail, title, likeCount, commentCount,
+      } = results;
+      const heroTitle = document.querySelector(".hero-content-wrapper h2");
+      const heroText = document.querySelector(".hero-content-wrapper p");
+      heroTitle.innerHTML = "";
+      heroText.innerHTML = "";
+
+      const articleDetailContainer = document.querySelector(".article-detail-container");
+
+      const thumbnailElem = articleDetailContainer.querySelector(".article-content picture img");
+      thumbnailElem.setAttribute("src", thumbnail);
+      thumbnailElem.addEventListener("error", () => {
+        thumbnailElem.setAttribute("src", "/public/img/img-not-found.png");
+      });
+      articleDetailContainer.querySelector(".article-title").textContent = title;
+      articleDetailContainer.querySelector(".author-name").textContent = author;
+      articleDetailContainer.querySelector(".date-published").textContent = moment(datepublished).locale("id").format("dddd, DD MMM YYYY");
+      articleDetailContainer.querySelector(".article-category").textContent = categoryName;
+      articleDetailContainer.querySelector(".article-detail-body-description").innerHTML = description;
+      articleDetailContainer.querySelector(".like-count").textContent = `${numberToNotation(likeCount)} Like`;
+      articleDetailContainer.querySelector(".comment-count").textContent = numberToNotation(commentCount);
+    });
 
     const toolbarOptions = [
       ["bold", "italic", "underline", "strike"],
@@ -117,25 +148,28 @@ class KulinerController extends Controller {
       theme: "snow",
     };
     const quill = new Quill("#komentar-editor", options);
+    this.renderComment();
+  }
 
+  renderComment() {
     const commentContainer = document.querySelector(".comment-container");
-    for (let amount = 1; amount <= 5; amount++) {
-      const template = document.createElement("template");
-      template.innerHTML = `
-        <div class="comment-items row gx-0 mb-2">
-            <picture class="bg-white placeholder-wave w-25 overflow-hidden rounded-circle col"
-                style="aspect-ratio: 1/1; height: 100%;">
-                <img alt="" class="placeholder w-25 " style="aspect-ratio: 1/1; height: 100%;">
-            </picture>
-            <div class="comment-body col-10 ms-2">
-                <p class="mb-0" style="line-height: 1rem;">Name</p>
-                <small class="text-secondary fw-bold ">Tanggal</small>
-                <p class="mb-0">Comment</p>
-            </div>
-        </div>
-      `;
-      commentContainer.appendChild(template.content.cloneNode(true));
+    const { slug } = Controller.parameters;
+    if (this._articleLazyComment === 1) {
+      commentContainer.innerHTML = "";
     }
+    $.get(`${process.env.API_ENDPOINT}/api/recipe/comments/${slug}/${this._articleLazyComment}`).done((response) => {
+      const { results } = response;
+      results?.forEach((comment) => {
+        const commentCard = document.createElement("div", { is: "comment-card" });
+        commentCard.setAttribute("json-data", JSON.stringify(comment));
+        commentContainer.appendChild(commentCard);
+      });
+      if (results.length <= 0) {
+        this._articleLazyComment = "last";
+      }
+    });
+
+    if (this._articleLazyComment !== "last") this._articleLazyComment += 1;
   }
 }
 

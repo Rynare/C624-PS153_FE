@@ -6,7 +6,9 @@
 }
 
 .kuliner-container .new-post-btn::before {
-    content: "+"
+    content: "+";
+    font-weight: bold;
+    font-size: 1.2rem;
 }
 
 .kuliner-container .search-bar {

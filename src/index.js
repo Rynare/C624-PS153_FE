@@ -90,10 +90,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginBtns = document.querySelectorAll("nav :is(.nav-mobile,.nav-desktop) .login-btn");
   const logoutBtns = document.querySelectorAll("nav :is(.nav-mobile,.nav-desktop) .logout-btn");
   const userOptionBtns = document.querySelectorAll("nav :is(.nav-mobile,.nav-desktop) .user-option-btn");
-  const profilePictureElems = document.querySelectorAll("nav :is(.nav-mobile,.nav-desktop) .sign-option .profile-picture img");
+  const profilePictureElems = document.querySelectorAll("nav :is(.nav-mobile,.nav-desktop) .sign-option .profile-picture");
 
   const mobileSignOption = document.querySelector(".nav-mobile .sign-option");
-  const desktopSignOption = document.querySelector(".nav-desktop .sign-option");
 
   loginBtns.forEach((loginBtn) => {
     loginBtn.addEventListener("click", googleOAuth.doSignin);
@@ -118,9 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       (response) => {
         const { details: { id: signID } } = response;
-        googleOAuth.setMoreUserDetails({ id: signID });
-
-        console.log(response, googleOAuth.getCurrentUser());
+        googleOAuth.setMoreUserDetails({ id_user: signID });
 
         loginBtns.forEach((loginBtn) => {
           loginBtn.classList.add("d-none");
@@ -132,11 +129,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         mobileSignOption.querySelector(".short-info").classList.remove("d-none");
         mobileSignOption.querySelector(".short-info #signin-username").textContent = displayName;
-
         profilePictureElems.forEach((profilePictureElem) => {
-          profilePictureElem.setAttribute("src", `${profilePicture}`);
-          profilePictureElem.addEventListener("error", () => {
-            profilePictureElem.setAttribute("src", "/public/img/defaultProfilePicture.png");
+          profilePictureElem.classList.remove("d-none");
+          const img = profilePictureElem.querySelector("img");
+          img.setAttribute("src", `${profilePicture}`);
+          img.addEventListener("error", () => {
+            img.setAttribute("src", "/public/img/defaultProfilePicture.png");
           });
         });
       },
@@ -158,7 +156,9 @@ document.addEventListener("DOMContentLoaded", () => {
     mobileSignOption.querySelector(".short-info #signin-username").textContent = "";
 
     profilePictureElems.forEach((profilePictureElem) => {
-      profilePictureElem.removeAttribute("src");
+      const img = profilePictureElem.querySelector("img");
+      profilePictureElem.classList.add("d-none");
+      img.removeAttribute("src");
     });
   }
 });
