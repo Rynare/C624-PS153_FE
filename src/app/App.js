@@ -84,13 +84,14 @@ class App {
   _modifyAnchorEvent() {
     document.addEventListener("click", (evt) => {
       const { target } = evt;
+      const targetHref = target.getAttribute("href");
       const isLinkRouter = target.getAttribute("is") === "link-router";
-      const isStartWithTag = (target.getAttribute("href")?.startsWith("#")) === true;
+      const isStartWithTag = (targetHref?.startsWith("#")) === true;
       const isAnchor = (target?.tagName === "A") === true;
 
       if (isAnchor && isStartWithTag && !isLinkRouter) {
         evt.preventDefault();
-        const section = document.querySelector(target.getAttribute("href"));
+        const section = document.getElementById(targetHref.replace("#", ""));
         if (section) {
           section.scrollIntoView({ behavior: "smooth" });
         }
