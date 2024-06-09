@@ -6,4 +6,9 @@
 
 .comment-items .comment-username {
     line-height: 1rem;
+    color: #337ab7;
+}
+
+.comment-items .comment-body .comment-msg p {
+    margin-bottom: 0;
 }

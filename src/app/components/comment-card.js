@@ -1,14 +1,15 @@
+import moment from "moment";
 import "./comment-card.css";
 
 const template = document.createElement("template");
 template.innerHTML = `
-    <div class="comment-items row gx-0 mb-2">
-        <picture class="bg-white placeholder-wave w-25 overflow-hidden rounded-circle col">
-            <img alt="" class="placeholder w-25 ">
+    <div class="comment-items d-flex p-2">
+        <picture class="bg-white overflow-hidden rounded-circle ">
+            <img alt="" class="">
         </picture>
-        <div class="comment-body col-10 ms-2">
-            <p class="mb-0 comment-username">Name</p>
-            <small class="text-secondary fw-bold comment-date">Tanggal</small>
+        <div class="comment-body ms-3 ms-sm-4 mt-1">
+            <p class="mb-0 comment-username fw-bold">Name</p>
+            <small class="text-secondary comment-date small">Tanggal</small>
             <p class="mb-0 comment-msg">Comment</p>
         </div>
     </div>
@@ -27,11 +28,17 @@ class CommentCard extends HTMLDivElement {
     this.innerHTML = "";
     this.appendChild(template.content.cloneNode(true));
 
-    const { name, datePosted, msg } = JSON.parse(this.getAttribute("json-data"));
+    const {
+      name, datePosted, msg, profilePicture,
+    } = JSON.parse(this.getAttribute("json-data"));
 
     this.querySelector(".comment-username").textContent = name;
-    this.querySelector(".comment-date").textContent = datePosted;
+    this.querySelector(".comment-date").textContent = moment(datePosted).locale("id").fromNow();
     this.querySelector(".comment-msg").innerHTML = msg;
+    this.querySelector("picture img").setAttribute("src", profilePicture);
+    this.querySelector("picture img").addEventListener("error", () => {
+      this.querySelector("picture img").setAttribute("src", "/public/img/defaultProfilePicture.png");
+    });
   }
 
   attributeChangedCallback(name, oldValue, newValue) {

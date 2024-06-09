@@ -7,35 +7,26 @@ import {
   signOut,
 } from "firebase/auth";
 import { initializeApp, getApps } from "firebase/app";
-import { Controller } from "./Controller.js";
 import { firebaseConfig } from "../Auth/FirebaseSetup.js";
 
-class LoginController extends Controller {
-  static allOAuthEntries = {};
-
-  #moreUserDetails = {};
+class LoginController {
+  static userLoginInformation = {};
 
   #onSigninAction = () => console.log("Yeay! Kamu berhasil login.");
 
   #onSignoutAction = () => console.log("Yahh... Kamu telah keluar.");
 
-  #entriesName = null;
-
-  constructor({
-    entriesName = `default-${new Date().getTime()}`,
-    replaceEntriesWithSameName = false,
-    extend = false,
-  }) {
-    super();
-    this.setEntries(
-      entriesName,
-      (
-        replaceEntriesWithSameName === true
-        || replaceEntriesWithSameName === "true"
-        || replaceEntriesWithSameName === 1
-      ),
-      extend,
-    );
+  constructor(isCore = false) {
+    this.isCore = false;
+    if ([false, true, 0, 1].includes(isCore)) {
+      if (isCore === 1 || isCore === true) {
+        this.isCore = true;
+      } else {
+        this.isCore = false;
+      }
+    } else {
+      this.isCore = false;
+    }
   }
 
   get onSigninAction() {
@@ -46,35 +37,29 @@ class LoginController extends Controller {
     return this.#onSignoutAction;
   }
 
-  setEntries(name, replace, extend) {
-    if (this.#entriesName === null) {
-      if (LoginController.allOAuthEntries[name]) {
-        if (replace) {
-          LoginController.allOAuthEntries[name] = this;
-        } else if (extend) {
-          Object.assign(this, LoginController.allOAuthEntries[name]);
-        } else {
-          throw new Error(`Entry dengan nama "${name}" sudah ada.`);
-        }
-      } else {
-        this.#entriesName = name;
-        LoginController.allOAuthEntries[this.#entriesName] = this;
-      }
-    } else {
-      throw new Error(`Tidak dapat menamai ulang! Entry sudah memiliki nama: "${this.#entriesName}".`);
-    }
-  }
-
   init() {
     if (!getApps().length) {
       initializeApp(firebaseConfig);
     }
     const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
-        this.onSigninAction();
+        const {
+          displayName, uid, email, photoURL,
+        } = user;
+        if (this.isCore) {
+          Object.assign(LoginController.userLoginInformation, {
+            displayName, uid, email, defaultProfilePicture: photoURL,
+          });
+        }
+        await this.onSigninAction();
+        localStorage.setItem("currentUser", JSON.stringify(this.getCurrentUser()));
       } else {
-        this.onSignoutAction();
+        if (this.isCore) {
+          LoginController.userLoginInformation = {};
+        }
+        await this.onSignoutAction();
+        localStorage.setItem("currentUser", JSON.stringify(this.getCurrentUser()));
       }
     });
   }
@@ -84,19 +69,16 @@ class LoginController extends Controller {
     const isSignedIn = !!currentUser;
     return {
       isSignedIn,
-      userData: currentUser ? {
-        ...this.#moreUserDetails,
-        uid: currentUser.uid,
-        displayName: currentUser.displayName,
-        email: currentUser.email,
-        profilePicture: currentUser.photoURL,
+      userData: isSignedIn ? {
+        ...LoginController.userLoginInformation,
       } : null,
     };
   }
 
   setMoreUserDetails(details) {
     if (typeof details === "object") {
-      Object.assign(this.#moreUserDetails, { ...details });
+      Object.assign(LoginController.userLoginInformation, { ...details });
+      localStorage.setItem("currentUser", JSON.stringify(this.getCurrentUser()));
     } else {
       throw new Error("Parameter harus berupa object");
     }
@@ -116,6 +98,7 @@ class LoginController extends Controller {
       } else {
         await signInWithPopup(auth, googleProvider);
       }
+      window.location.reload();
     } catch (error) {
       const {
         code, message, email, credential,
@@ -128,7 +111,7 @@ class LoginController extends Controller {
     const auth = getAuth();
     try {
       await signOut(auth);
-      this.#moreUserDetails = {};
+      window.location.reload();
     } catch (error) {
       console.error("Error ketika sign-out:", error);
     }

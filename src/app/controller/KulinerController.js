@@ -4,12 +4,14 @@ import "@selectize/selectize";
 import moment from "moment";
 import { Controller } from "./Controller.js";
 import { numberToNotation } from "../../utils/helper/number-to-notation.js";
+import { LoginController } from "./LoginController.js";
 
 class KulinerController extends Controller {
   constructor() {
     super();
     this._articleLazyPage = 1;
     this._articleLazyComment = 1;
+    this._sortBy = "?sort=new";
   }
 
   async index() {
@@ -99,22 +101,28 @@ class KulinerController extends Controller {
 
   async detail() {
     this._articleLazyComment = 1;
+    let articleID;
     await this.view("/pages/kuliner-detail.html");
 
     document.querySelector(".hero-container").classList.add("d-none");
+    const articleDetailContainer = document.querySelector(".article-detail-container");
 
-    $.get(`${process.env.API_ENDPOINT}/api/article/detail/${Controller.parameters.slug}`).done((response) => {
+    const commentOAuth = new LoginController();
+    commentOAuth.setOnSigninAction(afterSignin);
+    commentOAuth.setOnSignoutAction(afterSignout);
+    commentOAuth.init();
+
+    $.get(`${process.env.API_ENDPOINT}/api/article/detail/${Controller.parameters.slug}?user=${commentOAuth?.getCurrentUser()?.userData?.id_user || JSON.parse(localStorage?.currentUser || "{}")?.userData?.id_user || ""}`).done((response) => {
       const { results } = response;
       const {
-        author, datepublished, category: { name: categoryName }, description,
-        thumbnail, title, likeCount, commentCount,
+        authorName, datePublished, category: { name: categoryName }, description, _id,
+        thumbnail, title, likeCount, commentCount, isLiked,
       } = results;
+      articleID = _id;
       const heroTitle = document.querySelector(".hero-content-wrapper h2");
       const heroText = document.querySelector(".hero-content-wrapper p");
       heroTitle.innerHTML = "";
       heroText.innerHTML = "";
-
-      const articleDetailContainer = document.querySelector(".article-detail-container");
 
       const thumbnailElem = articleDetailContainer.querySelector(".article-content picture img");
       thumbnailElem.setAttribute("src", thumbnail);
@@ -122,12 +130,33 @@ class KulinerController extends Controller {
         thumbnailElem.setAttribute("src", "/public/img/img-not-found.png");
       });
       articleDetailContainer.querySelector(".article-title").textContent = title;
-      articleDetailContainer.querySelector(".author-name").textContent = author;
-      articleDetailContainer.querySelector(".date-published").textContent = moment(datepublished).locale("id").format("dddd, DD MMM YYYY");
+      articleDetailContainer.querySelector(".author-name").textContent = authorName;
+      articleDetailContainer.querySelector(".date-published").textContent = moment(datePublished).locale("id").format("dddd, DD MMM YYYY");
       articleDetailContainer.querySelector(".article-category").textContent = categoryName;
       articleDetailContainer.querySelector(".article-detail-body-description").innerHTML = description;
-      articleDetailContainer.querySelector(".like-count").textContent = `${numberToNotation(likeCount)} Like`;
-      articleDetailContainer.querySelector(".comment-count").textContent = numberToNotation(commentCount);
+      articleDetailContainer.querySelector(".like-count").textContent = `${numberToNotation(likeCount || 0)}`;
+      articleDetailContainer.querySelector(".comment-count").textContent = numberToNotation(commentCount || 0);
+      const likeBtn = document.querySelector("span.like-button");
+      likeBtn.querySelector("button.like-btn").setAttribute("is-active", isLiked);
+
+      likeBtn.addEventListener("click", () => {
+        const { isSignedIn, userData } = commentOAuth.getCurrentUser();
+        if (isSignedIn) {
+          const {
+            id_user: userID, email, uid,
+          } = userData;
+          $.post(`${process.env.API_ENDPOINT}/api/article/like/${articleID}`, {
+            id_user: userID, email, uid,
+          }).done((likeRes) => {
+            likeBtn.querySelector("button.like-btn").setAttribute("is-active", likeRes.isLike);
+            likeBtn.querySelector(".like-count").textContent = numberToNotation(likeRes?.likeCount);
+          });
+        } else {
+          commentOAuth.doSignin();
+        }
+      });
+
+      this.renderComment(articleID);
     });
 
     const toolbarOptions = [
@@ -148,16 +177,71 @@ class KulinerController extends Controller {
       theme: "snow",
     };
     const quill = new Quill("#komentar-editor", options);
-    this.renderComment();
+
+    function loadCommentProfilePicture() {
+      const { userData: { profilePicture, defaultProfilePicture } } = commentOAuth.getCurrentUser();
+      articleDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", profilePicture || defaultProfilePicture || "public/img/img-not-found.png");
+    }
+
+    document.body.addEventListener("user-signed", () => {
+      loadCommentProfilePicture();
+    });
+
+    function afterSignin() {
+      loadCommentProfilePicture();
+    }
+    function afterSignout() {
+      articleDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", "public/img/defaultProfilePicture.png");
+    }
+
+    document.querySelector(".new-comment-editor-container button.post-new-comment ").addEventListener("click", () => {
+      const { isSignedIn, userData } = commentOAuth.getCurrentUser();
+      if (isSignedIn) {
+        const {
+          id_user: userID, email, uid, profilePicture, displayName,
+        } = userData;
+        if (quill.getText().trim().length >= 1) {
+          const value = quill.root.innerHTML;
+          $.post(`${process.env.API_ENDPOINT}/api/article/comments/${articleID}`, {
+            id_user: userID, uid, email, msg: value,
+          }).done((/* response */) => {
+            quill.setText("");
+            const commentCard = document.createElement("div", { is: "comment-card" });
+            commentCard.setAttribute("json-data", JSON.stringify({
+              profilePicture,
+              msg: value,
+              name: displayName,
+            }));
+            document.querySelector(".comment-container").insertBefore(commentCard, document.querySelector(".comment-container>div:nth-child(1)"));
+          })
+            .fail((error) => {
+              console.error("Error ketika mengirim komentar:", error);
+            });
+        }
+      } else {
+        commentOAuth.doSignin();
+      }
+    });
+
+    const form = document.querySelector(".comment-sub-header form");
+    form.addEventListener("change", () => {
+      const formdata = new FormData(form);
+      this._sortBy = formdata.get("sort-by");
+      this._articleLazyComment = 1;
+      this.renderComment(articleID);
+    });
+
+    document.getElementById("load-more").addEventListener("click", () => {
+      this.renderComment(articleID);
+    });
   }
 
-  renderComment() {
-    const commentContainer = document.querySelector(".comment-container");
-    const { slug } = Controller.parameters;
-    if (this._articleLazyComment === 1) {
-      commentContainer.innerHTML = "";
-    }
-    $.get(`${process.env.API_ENDPOINT}/api/recipe/comments/${slug}/${this._articleLazyComment}`).done((response) => {
+  renderComment(articleID) {
+    $.get(`${process.env.API_ENDPOINT}/api/article/comments/${articleID}/${this._articleLazyComment}${this._sortBy}`).done((response) => {
+      const commentContainer = document.querySelector(".comment-container");
+      if (this._articleLazyComment === 1) {
+        commentContainer.innerHTML = "";
+      }
       const { results } = response;
       results?.forEach((comment) => {
         const commentCard = document.createElement("div", { is: "comment-card" });
@@ -166,10 +250,12 @@ class KulinerController extends Controller {
       });
       if (results.length <= 0) {
         this._articleLazyComment = "last";
+        document.getElementById("load-more").classList.add("d-none");
+      } else {
+        document.getElementById("load-more").classList.remove("d-none");
       }
+      if (this._articleLazyComment !== "last") this._articleLazyComment += 1;
     });
-
-    if (this._articleLazyComment !== "last") this._articleLazyComment += 1;
   }
 }
 

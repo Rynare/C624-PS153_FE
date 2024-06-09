@@ -12,7 +12,6 @@ class App {
       throw new Error("Anda hanya bisa membuat 1 instance app");
     } else {
       App.mainContent = document.querySelector(process.env.APP_MAIN_CONTENT);
-      this._modifyAnchorEvent();
       this._listenTabIndex();
     }
   }
@@ -79,24 +78,6 @@ class App {
       isVisible = false;
     }
     return isVisible;
-  }
-
-  _modifyAnchorEvent() {
-    document.addEventListener("click", (evt) => {
-      const { target } = evt;
-      const targetHref = target.getAttribute("href");
-      const isLinkRouter = target.getAttribute("is") === "link-router";
-      const isStartWithTag = (targetHref?.startsWith("#")) === true;
-      const isAnchor = (target?.tagName === "A") === true;
-
-      if (isAnchor && isStartWithTag && !isLinkRouter) {
-        evt.preventDefault();
-        const section = document.getElementById(targetHref.replace("#", ""));
-        if (section) {
-          section.scrollIntoView({ behavior: "smooth" });
-        }
-      }
-    });
   }
 }
 

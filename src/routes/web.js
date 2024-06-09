@@ -12,7 +12,7 @@ const routes = [
   router("/artikel", [new KulinerController(), "index"]),
   router("/artikel-detail/:slug", [new KulinerController(), "detail"]),
   router("/resep", [new ResepController(), "index"]),
-  router("/resep-detail/:slug", [new ResepController(), "index"]),
+  router("/resep-detail/:slug", [new ResepController(), "resepDetail"]),
 ];
 
 export { routes };
