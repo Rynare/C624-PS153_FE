@@ -1,0 +1,67 @@
+.recipe-detail-container .new-comment-editor-container #komentar-editor {
+    max-height: 5rem;
+    overflow-y: scroll;
+    height: 5rem;
+}
+
+.recipe-detail-container .recipe-content :is(picture, img) {
+    height: 100vh;
+    width: -webkit-fill-available;
+    filter: blur(1px);
+    object-fit: cover;
+    object-position: center;
+}
+
+.recipe-detail-container .thumbnail-text {
+    width: 100%;
+    height: 100%;
+    backdrop-filter: brightness(0.5);
+}
+
+.recipe-detail-container .thumbnail-text-wrapper {
+    max-width: 70%;
+}
+
+.recipe-detail-container .new-comment picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    aspect-ratio: 1 / 1;
+}
+
+.recipe-detail-container .recipe-comment {
+    max-width: 840px;
+}
+
+.recipe-detail-container .comment-sub-header .comment-sort-by input:checked~label {
+    border-bottom: 2px solid #337ab7;
+}
+
+.recipe-detail-container .accordion {
+    --bs-accordion-color: var(---);
+    --bs-accordion-bg: var(---);
+    --bs-accordion-btn-bg: var(---);
+    --bs-accordion-btn-color: var(---);
+    --bs-accordion-border-color: var(---);
+    --bs-accordion-active-bg: var(---);
+    --bs-accordion-active-color: var(---);
+    --bs-accordion-btn-focus-box-shadow: : var(---);
+    --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27none%27 stroke=%27%23212529%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpath d=%27M2 5L8 11L14 5%27/%3e%3c/svg%3e")
+}
+
+.recipe-detail-container .accordion-button::after {
+    filter: brightness(10);
+}
+
+.recipe-detail-container .accordion-header .accordion-button {
+    padding-left: 0;
+}
+
+.recipe-detail-container .accordion-header .accordion-button ol {
+    margin: 0;
+}
+
+.recipe-detail-container ul.recipe-ingredients li {
+    flex-grow: 1;
+}
