@@ -1,5 +1,7 @@
 import $ from "jquery";
 import { Controller } from "./Controller.js";
+import { recipeCardSkelleton } from "../components/recipe-card-skelleton.js";
+import { articleCardSkelleton } from "../components/article-card-skelleton.js";
 
 class HomeController extends Controller {
   constructor() {
@@ -19,14 +21,8 @@ class HomeController extends Controller {
     const recipeSlider = document.querySelector(".popular-recipes");
     const articleSlider = document.querySelector(".popular-articles");
     for (let amount = 1; amount <= 10; amount++) {
-      articleSlider.innerHTML += `
-        <div class="card placeholder-glow  bg-white rounded">
-            <div class="placeholder" style="aspect-ratio: 3/2; width: 30vw;max-width: 220px;"></div>
-        </div>`;
-      recipeSlider.innerHTML += `
-        <div class="card placeholder-glow bg-white rounded">
-            <div class="placeholder" style="aspect-ratio: 3/2; width: 30vw;max-width: 220px;"></div>
-        </div>`;
+      recipeSlider.appendChild(recipeCardSkelleton.content.cloneNode(true));
+      articleSlider.appendChild(articleCardSkelleton.content.cloneNode(true));
     }
 
     $.get(`${process.env.API_ENDPOINT}/api/popular-recipes`).done((response) => {

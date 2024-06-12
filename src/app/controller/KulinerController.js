@@ -1,10 +1,10 @@
 import Quill from "quill";
 import $ from "jquery";
-import "@selectize/selectize";
 import moment from "moment";
 import { Controller } from "./Controller.js";
 import { numberToNotation } from "../../utils/helper/number-to-notation.js";
 import { LoginController } from "./LoginController.js";
+import { articleCardSkelleton } from "../components/article-card-skelleton.js";
 
 class KulinerController extends Controller {
   constructor() {
@@ -12,11 +12,22 @@ class KulinerController extends Controller {
     this._articleLazyPage = 1;
     this._articleLazyComment = 1;
     this._sortBy = "?sort=new";
+    this._loginController = new LoginController();
+    this._currentQuery = `${process.env.API_ENDPOINT}/api/articles/page/${this._articleLazyPage}`;
+    this.currentQuery = () => this._currentQuery;
+    this._isSearching = false;
+    this._keyword = "";
   }
 
   async index() {
     await this.view("/pages/kuliner.html");
     this._articleLazyPage = 1;
+    this._currentQuery = `${process.env.API_ENDPOINT}/api/articles/page/${this._articleLazyPage}`;
+    const kulinerPostList = document.querySelector(".kuliner-container .kuliner-post-list");
+
+    for (let amount = 1; amount <= 12; amount++) {
+      kulinerPostList.appendChild(articleCardSkelleton.content.cloneNode(true));
+    }
 
     document.querySelector(".hero-container").classList.remove("d-none");
 
@@ -25,78 +36,77 @@ class KulinerController extends Controller {
     heroTitle.innerHTML = "Qulinery/Post";
     heroText.innerHTML = "Bagikan cerita tentang pengalaman kulinermu disini.";
 
+    const renderArticles = () => {
+      $.get(this.currentQuery()).done((response) => {
+        if (this._articleLazyPage === 1) {
+          kulinerPostList.innerHTML = "";
+          document.querySelector(".kuliner-post-body .kuliner-post-loading").classList.remove("d-none");
+          document.querySelector(".kuliner-post-body .last-page-message").classList.add("d-none");
+        }
+        const { results } = response;
+        if (results.length <= 0) {
+          this._articleLazyPage = "last";
+
+          document.querySelector(".kuliner-post-body .kuliner-post-loading").classList.add("d-none");
+          document.querySelector(".kuliner-post-body .last-page-message").classList.remove("d-none");
+        } else {
+          this.renderCards(results);
+          if (this._articleLazyPage !== "last") this._articleLazyPage += 1;
+          if (!this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/articles/page/${this._articleLazyPage}`;
+          if (this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/articles/search/${this._keyword}/${this._articleLazyPage}`;
+        }
+      });
+    };
+
+    renderArticles();
+
     const lazyLoadObserver = new IntersectionObserver((theElements) => {
       const { isIntersecting } = theElements[0];
+
       if (isIntersecting && this._articleLazyPage !== "last") {
-        this.renderCard();
+        renderArticles();
       }
     });
 
     lazyLoadObserver.observe(document.querySelector(".kuliner-post-body .kuliner-post-loading"));
 
-    const toolbarOptions = [
-      // [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      [{ font: [] }],
-      [{ size: ["small", false, "large", "huge"] }],
-      ["bold", "italic", "underline", "strike"],
-      ["blockquote"],
-
-      [{ align: [] }],
-      [{ indent: "-1" }, { indent: "+1" }],
-
-      [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
-      [{ color: [] }, { background: [] }],
-      // [{ script: "sub" }, { script: "super" }],
-
-      ["link", "image", "video"],
-      ["clean"],
-    ];
-    const options = {
-      debug: "info",
-      modules: {
-        toolbar: toolbarOptions,
-      },
-      placeholder: "Masukkan Deskripsimu disini...",
-      theme: "snow",
-    };
-    const quill = new Quill("#deskripsi-lengkap-editor", options);
-    $("#select-tools").selectize({
-      maxItems: null,
-      valueField: "id",
-      labelField: "title",
-      searchField: "title",
-      options: [
-        { id: 1, title: "Spectrometer", url: "http://en.wikipedia.org/wiki/Spectrometers" },
-        { id: 2, title: "Star Chart", url: "http://en.wikipedia.org/wiki/Star_chart" },
-        { id: 3, title: "Electrical Tape", url: "http://en.wikipedia.org/wiki/Electrical_tape" },
-      ],
-      create: false,
-    });
-  }
-
-  renderCard() {
-    const kulinerPostList = document.querySelector(".kuliner-post-list");
-    if (this._articleLazyPage === 1) {
-      kulinerPostList.innerHTML = "";
-    }
-    $.get(`${process.env.API_ENDPOINT}/api/articles/page/${this._articleLazyPage}`).done((response) => {
-      const { results } = response;
-      results.forEach((result) => {
-        const resultStr = JSON.stringify(result);
-        const topArticleCard = document.createElement("div", { is: "article-card" });
-        topArticleCard.classList.add(..."article-card overflow-hidden rounded col p-1".split(" "));
-        topArticleCard.setAttribute("json-data", resultStr);
-        kulinerPostList.appendChild(topArticleCard);
-      });
-      if (results.length <= 0) {
-        this._articleLazyPage = "last";
-
-        document.querySelector(".kuliner-post-body .kuliner-post-loading").classList.add("d-none");
-        document.querySelector(".kuliner-post-body .last-page-message").classList.remove("d-none");
+    const makeNewPostBtn = document.querySelector(".new-post-btn");
+    makeNewPostBtn.addEventListener("click", () => {
+      if (this._loginController.getCurrentUser().isSignedIn) {
+        makeNewPostBtn.querySelector("a").click();
+      } else {
+        this._loginController.doSignin();
       }
     });
 
-    if (this._articleLazyPage !== "last") this._articleLazyPage += 1;
+    const searchBar = document.querySelector(".kuliner-container form.search-bar");
+    searchBar.addEventListener("submit", (evt) => {
+      evt.preventDefault();
+      this._articleLazyPage = 1;
+      const formdata = new FormData(searchBar);
+      this._keyword = formdata.get("keyword");
+      if (this._keyword.trim() === "") {
+        this._isSearching = false;
+      } else {
+        this._isSearching = true;
+      }
+      if (!this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/articles/page/${this._articleLazyPage}`;
+      if (this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/articles/search/${this._keyword}/${this._articleLazyPage}`;
+      kulinerPostList.innerHTML = "";
+      document.querySelector(".kuliner-post-body .kuliner-post-loading").classList.remove("d-none");
+      document.querySelector(".kuliner-post-body .last-page-message").classList.add("d-none");
+    });
+  }
+
+  renderCards(articles) {
+    const kulinerPostList = document.querySelector(".kuliner-post-list");
+    articles.forEach((article) => {
+      const articleStr = JSON.stringify(article);
+      const topArticleCard = document.createElement("div", { is: "article-card" });
+      topArticleCard.classList.add(..."article-card overflow-hidden rounded col p-1".split(" "));
+      topArticleCard.setAttribute("json-data", articleStr);
+      kulinerPostList.appendChild(topArticleCard);
+    });
   }
 
   async detail() {
@@ -107,7 +117,7 @@ class KulinerController extends Controller {
     document.querySelector(".hero-container").classList.add("d-none");
     const articleDetailContainer = document.querySelector(".article-detail-container");
 
-    const commentOAuth = new LoginController();
+    const commentOAuth = this._loginController;
     commentOAuth.setOnSigninAction(afterSignin);
     commentOAuth.setOnSignoutAction(afterSignout);
     commentOAuth.init();
@@ -163,13 +173,12 @@ class KulinerController extends Controller {
       ["bold", "italic", "underline", "strike"],
       ["blockquote"],
 
-      [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
+      [{ list: "ordered" }, { list: "bullet" }],
       [{ color: [] }, { background: [] }],
 
       ["clean"],
     ];
     const options = {
-      debug: "info",
       modules: {
         toolbar: toolbarOptions,
       },

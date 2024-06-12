@@ -1,10 +1,11 @@
 <div class="kuliner-container mx-2 mx-sm-4 mx-lg-0">
     <div class="kuliner-post-header d-flex justify-content-between column-gap-2 px-2 mb-4">
-        <button class="new-post-btn btn btn-primary pt-1" data-bs-toggle="modal" data-bs-target="#newKulinerPost">
-            Post
+        <button type="button" class="new-post-btn btn btn-primary pt-1">
+            <span class="ms-1">New</span>
+            <a href="/post-article" is="link-router"></a>
         </button>
         <form action="" class="search-bar pb-2 ">
-            <input type="text" placeholder="Cari..." class="search-input pt-1 ">
+            <input type="text" placeholder="Cari..." class="search-input pt-1" name="keyword">
             <button class="search-btn pt-1"><i class="bi bi-search"></i></button>
         </form>
     </div>
@@ -12,51 +13,13 @@
         <div
             class="kuliner-post-list row gx-0 px-2 text-white row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 justify-content-center mb-4">
         </div>
-        <div class="kuliner-post-loading d-flex align-items-center justify-content-center  mb-4">
+        <div class="kuliner-post-loading d-flex align-items-center justify-content-center  mb-4 d-none">
             <div>
                 <div class="loader the-bar-loader"></div>
             </div>
         </div>
         <div class="last-page-message d-none mb-4">
-            <h1 class="text-white">End Of Article</h1>
-        </div>
-    </div>
-
-    <div class="modal fade" id="newKulinerPost" tabindex="-1" aria-labelledby="newKulinerPostLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable ">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <!-- <h1 class="modal-title fs-5" id="newKulinerPostLabel">Modal title</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="judul-post-kuliner" class="form-label">Judul</label>
-                        <input type="text" class="form-control" id="judul-post-kuliner" name="judul"
-                            placeholder="Masukkan judul...">
-                    </div>
-                    <div class="mb-3">
-                        <label for="deskripsi-post-kuliner" class="form-label">Deskripsi singkat</label>
-                        <textarea class="form-control" id="deskripsi-post-kuliner" rows="3"
-                            name="deskripsi_singkat"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="deskripsi-post-kuliner" class="form-label">Deskripsi lengkap</label>
-                        <div id="deskripsi-lengkap-editor">
-
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="artikel-tag-multi-input" class="form-label">Tag</label>
-                        <select id="select-tools" multiple placeholder="Tambahkan tag...">
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
+            <h6 class="text-white text-center">Semua resep telah ditampilkan.</h6>
         </div>
     </div>
 </div>

@@ -12,7 +12,6 @@ class App {
       throw new Error("Anda hanya bisa membuat 1 instance app");
     } else {
       App.mainContent = document.querySelector(process.env.APP_MAIN_CONTENT);
-      this._listenTabIndex();
     }
   }
 
@@ -42,22 +41,6 @@ class App {
     if (parseInt(filteredRoutes[0]?.request.parameter.length, 10) > 0) {
       filteredRoutes[0].request.putParameter();
     }
-  }
-
-  _listenTabIndex() {
-    document.addEventListener("keydown", (event) => {
-      const { activeElement } = document;
-      const isEditable = activeElement.tagName === "INPUT" || activeElement.tagName === "TEXTAREA";
-      if (activeElement === event.target && this._isElementVisible(activeElement)) {
-        if (
-          (event.keyCode === 13 || event.keyCode === 32)
-          && activeElement.tabIndex >= 0 && !isEditable
-        ) {
-          event.preventDefault();
-          event.target.click();
-        }
-      }
-    });
   }
 
   _isElementVisible(el) {

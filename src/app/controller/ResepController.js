@@ -4,6 +4,7 @@ import moment from "moment";
 import { Controller } from "./Controller.js";
 import { LoginController } from "./LoginController.js";
 import { numberToNotation } from "../../utils/helper/number-to-notation.js";
+import { recipeCardSkelleton } from "../components/recipe-card-skelleton.js";
 
 class ResepController extends Controller {
   constructor() {
@@ -11,11 +12,22 @@ class ResepController extends Controller {
     this._recipeLazyPage = 1;
     this._sortBy = "?sort=new";
     this._recipeLazyComment = 1;
+    this._loginController = new LoginController();
+    this._currentQuery = `${process.env.API_ENDPOINT}/api/recipes/page/${this._recipeLazyPage}`;
+    this.currentQuery = () => this._currentQuery;
+    this._isSearching = false;
+    this._keyword = "";
   }
 
   async index() {
     await this.view("/pages/resep.html");
     this._recipeLazyPage = 1;
+    this._currentQuery = `${process.env.API_ENDPOINT}/api/recipes/page/${this._recipeLazyPage}`;
+
+    const recipeListElement = document.querySelector(".recipe-container .recipes-list");
+    for (let amount = 1; amount <= 12; amount++) {
+      recipeListElement.appendChild(recipeCardSkelleton.content.cloneNode(true));
+    }
 
     document.querySelector(".hero-container").classList.remove("d-none");
 
@@ -24,40 +36,76 @@ class ResepController extends Controller {
     heroTitle.innerHTML = "Qulinery/Resep";
     heroText.innerHTML = "Bagikan resepmu disini agar mereka tahu nikmatnya masakanmu.";
 
+    const renderRecipes = () => {
+      $.get(this.currentQuery()).done((response) => {
+        if (this._recipeLazyPage === 1) {
+          recipeListElement.innerHTML = "";
+          document.querySelector(".recipe-container .loading-recipe").classList.remove("d-none");
+          document.querySelector(".recipe-container .last-recipe-message").classList.add("d-none");
+        }
+        const { results } = response;
+        if (results.length <= 0) {
+          this._recipeLazyPage = "last";
+
+          document.querySelector(".recipe-container .loading-recipe").classList.add("d-none");
+          document.querySelector(".recipe-container .last-recipe-message").classList.remove("d-none");
+        } else {
+          this.renderCards(results);
+          if (this._recipeLazyPage !== "last") this._recipeLazyPage += 1;
+          if (!this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/recipes/page/${this._recipeLazyPage}`;
+          if (this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/recipes/search/${this._keyword}/${this._recipeLazyPage}`;
+        }
+      });
+    };
+
+    renderRecipes();
+
     const lazyLoadObserver = new IntersectionObserver((theElements) => {
       const { isIntersecting } = theElements[0];
-      if (isIntersecting && this._articleLazyPage !== "last") {
-        this.renderCard();
+      if (isIntersecting && this._recipeLazyPage !== "last") {
+        renderRecipes();
       }
     });
 
     lazyLoadObserver.observe(document.querySelector(".recipe-container .loading-recipe"));
-  }
 
-  renderCard() {
-    const recipeListElement = document.querySelector(".recipes-list");
-    if (this._recipeLazyPage === 1) {
-      recipeListElement.innerHTML = "";
-    }
-    $.get(`${process.env.API_ENDPOINT}/api/recipes/page/${this._recipeLazyPage}`).done((response) => {
-      const { results } = response;
-
-      results.forEach((result) => {
-        const resultStr = JSON.stringify(result);
-        const topRecipeCard = document.createElement("div", { is: "recipe-card" });
-        topRecipeCard.classList.add(..."recipe-card position-relative rounded bg-white text-black px-0".split(" "));
-        topRecipeCard.setAttribute("json-data", resultStr);
-        recipeListElement.appendChild(topRecipeCard);
-      });
-      if (results.length <= 0) {
-        this._recipeLazyPage = "last";
-
-        document.querySelector(".recipe-container .loading-recipe").classList.add("d-none");
-        document.querySelector(".recipe-container .last-recipe-message").classList.remove("d-none");
+    const makeNewPostBtn = document.querySelector(".new-post-btn");
+    makeNewPostBtn.addEventListener("click", () => {
+      if (this._loginController.getCurrentUser().isSignedIn) {
+        makeNewPostBtn.querySelector("a").click();
+      } else {
+        this._loginController.doSignin();
       }
     });
+    const searchBar = document.querySelector(".recipe-container form.search-bar");
+    searchBar.addEventListener("submit", (evt) => {
+      evt.preventDefault();
+      this._recipeLazyPage = 1;
+      const formdata = new FormData(searchBar);
+      this._keyword = formdata.get("keyword");
+      if (this._keyword.trim() === "") {
+        this._isSearching = false;
+      } else {
+        this._isSearching = true;
+      }
+      if (!this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/recipes/page/${this._recipeLazyPage}`;
+      if (this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/recipes/search/${this._keyword}/${this._recipeLazyPage}`;
+      recipeListElement.innerHTML = "";
 
-    if (this._recipeLazyPage !== "last") this._recipeLazyPage += 1;
+      document.querySelector(".recipe-container .loading-recipe").classList.remove("d-none");
+      document.querySelector(".recipe-container .last-recipe-message").classList.add("d-none");
+    });
+  }
+
+  renderCards(recipes) {
+    const recipeListElement = document.querySelector(".recipes-list");
+    recipes.forEach((result) => {
+      const recipeStr = JSON.stringify(result);
+      const topRecipeCard = document.createElement("div", { is: "recipe-card" });
+      topRecipeCard.classList.add(..."recipe-card position-relative rounded bg-white text-black px-0".split(" "));
+      topRecipeCard.setAttribute("json-data", recipeStr);
+      recipeListElement.appendChild(topRecipeCard);
+    });
   }
 
   async resepDetail() {
@@ -172,7 +220,6 @@ class ResepController extends Controller {
       ["clean"],
     ];
     const options = {
-      debug: "info",
       modules: {
         toolbar: toolbarOptions,
       },

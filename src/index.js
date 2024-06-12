@@ -167,4 +167,21 @@ document.addEventListener("DOMContentLoaded", () => {
       offCanvasCloseBtn.click();
     }
   });
+
+  let isScrollToTopVisible = false;
+  document.addEventListener("scroll", () => {
+    const scrollToTop = document.querySelector(".scrollToTop");
+    const isTooMuchScroll = document.body.scrollTop > 70 || document.documentElement.scrollTop > 70;
+    if (isTooMuchScroll) {
+      if (isScrollToTopVisible === false) {
+        scrollToTop.style.transform = "translateY(-60px)";
+        isScrollToTopVisible = true;
+      }
+    } else if (!isTooMuchScroll) {
+      scrollToTop.style.transform = "translateY(0)";
+      if (isScrollToTopVisible === true) {
+        isScrollToTopVisible = false;
+      }
+    }
+  });
 });

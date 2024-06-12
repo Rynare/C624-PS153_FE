@@ -52,3 +52,14 @@
 .article-card .article-title:hover {
     text-decoration: underline;
 }
+
+.article-card.skelleton .skelleton-item {
+    cursor: wait;
+    color: transparent;
+    background-color: #e0e0e0;
+    animation: skeleton-loading 1s linear infinite alternate;
+}
+
+.article-card.skelleton {
+    padding: 5px;
+}

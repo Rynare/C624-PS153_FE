@@ -1,15 +1,25 @@
 <div class="recipe-container">
+    <div class="recipe-post-header d-flex justify-content-between column-gap-2 px-2 mb-4">
+        <button type="button" class="new-post-btn btn btn-primary pt-1">
+            <span class="ms-1">New</span>
+            <a href="/post-recipe" is="link-router"></a>
+        </button>
+        <form action="" class="search-bar pb-2 ">
+            <input type="text" placeholder="Ingin memasak apa hari ini?" class="search-input pt-1 " name="keyword">
+            <button class="search-btn pt-1" type="submit"><i class="bi bi-search"></i></button>
+        </form>
+    </div>
     <div
         class="recipes-list row gx-0 row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-ls-5 row-gap-5 column-gap-3 px-2 justify-content-center mb-5">
     </div>
     <div>
-        <div class="loading-recipe mb-4 d-flex align-items-center justify-content-center">
+        <div class="loading-recipe mb-4 d-flex align-items-center justify-content-center d-none">
             <div>
                 <div class="loader the-bar-loader"></div>
             </div>
         </div>
         <div class="last-recipe-message d-none mb-4">
-            <h1 class="text-white">Last Page</h1>
+            <h6 class="text-white text-center">Semua artikel sudah ditampilkan.</h6>
         </div>
     </div>
 </div>

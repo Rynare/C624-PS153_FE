@@ -72,6 +72,10 @@
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li> -->
+                                    <li><button type="button" class="dropdown-item my-profile-btn"
+                                            data-bs-toggle="modal" data-bs-target="#my-profile">
+                                            Profileku
+                                        </button></li>
                                     <li><button class="dropdown-item logout-btn">Keluar</button></li>
                                 </ul>
                             </div>
@@ -92,8 +96,12 @@
                         </picture>
                     </a>
                     <ul class="dropdown-menu">
-                        <!-- <li><button class="dropdown-item" data-bs-toggle="modal"
-                                data-bs-target="#signin-modal">Masuk</button></li> -->
+                        <li>
+                            <button type="button" class="dropdown-item my-profile-btn" data-bs-toggle="modal"
+                                data-bs-target="#my-profile">
+                                Profileku
+                            </button>
+                        </li>
                         <li><button class="dropdown-item logout-btn">
                                 Keluar
                             </button></li>
@@ -118,7 +126,7 @@
             </div>
         </div>
         <div id="app" class="flex-grow-1"></div>
-        <footer class="text-center py-1 mt-4 text-white ">
+        <footer class="text-center py-1 mt-4 text-white rounded-top-4 pt-4">
             <div>
                 <h4>Qulinery</h4>
                 <p>Temukan resep masakan asli indonesia disini.</p>
@@ -138,6 +146,54 @@
             </div>
         </footer>
     </div>
+    <div class="modal fade" id="my-profile" data-bs-keyboard="false" tabindex="-1" aria-labelledby="my-profileLabel"
+        aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="" id="my-profile-form">
+                    <div class="modal-body">
+                        <div class="container d-flex justify-content-center align-items-center">
+                            <div class="card">
+                                <div class="upper">
+                                    <img src="https://i.imgur.com/Qtrsrk5.jpg" class="img-fluid">
+                                </div>
+                                <div class="user text-center">
+                                    <div class="profile">
+                                        <img src="https://i.imgur.com/JgYD2nQ.jpg" class="rounded-circle" width="80">
+                                    </div>
+                                </div>
+                                <div class="mt-5 text-center">
+                                    <h4 class="mb-0">Benjamin Tims</h4>
+                                    <span class="text-muted d-block mb-2">Los Angles</span>
+                                    <button class="btn btn-primary btn-sm follow">Follow</button>
+                                    <div class="d-flex justify-content-between align-items-center mt-4 px-4">
+                                        <div class="stats">
+                                            <h6 class="mb-0">Followers</h6>
+                                            <span>8,797</span>
+                                        </div>
+                                        <div class="stats">
+                                            <h6 class="mb-0">Projects</h6>
+                                            <span>142</span>
+                                        </div>
+                                        <div class="stats">
+                                            <h6 class="mb-0">Ranks</h6>
+                                            <span>129</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <button onclick="document.body.scrollIntoView({behavior:'smooth'})" class="scrollToTop rounded-2"><i
+            class="bi bi-chevron-double-up"></i></button>
 </body>
 
 </html>

@@ -10,7 +10,7 @@ template.innerHTML = `
         <div class="comment-body ms-3 ms-sm-4 mt-1">
             <p class="mb-0 comment-username fw-bold">Name</p>
             <small class="text-secondary comment-date small">Tanggal</small>
-            <p class="mb-0 comment-msg">Comment</p>
+            <p class="mb-0 comment-msg ql-editor ql-editor-output">Comment</p>
         </div>
     </div>
 `;

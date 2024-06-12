@@ -1,29 +1,29 @@
-.kuliner-container .new-post-btn {
+:is(.recipe-container, .kuliner-container) .new-post-btn {
     display: flex;
     align-items: center;
-    justify-content: center;
-    column-gap: 8px;
 }
 
-.kuliner-container .new-post-btn::before {
+:is(.recipe-container, .kuliner-container) .new-post-btn::before {
     content: "+";
     font-weight: bold;
     font-size: 1.2rem;
 }
 
-.kuliner-container .search-bar {
+:is(.recipe-container, .kuliner-container) .search-bar {
     background-color: #252931;
     display: flex;
     border-radius: 20px;
     padding: 4px 10px;
     min-width: 0;
+    max-width: 336px;
+    width: -webkit-fill-available;
 }
 
-.kuliner-container .search-bar:focus-within {
+:is(.recipe-container, .kuliner-container) .search-bar:focus-within {
     outline: 0.5px solid #8ab4f8;
 }
 
-.kuliner-container .search-bar .search-input {
+:is(.recipe-container, .kuliner-container) .search-bar .search-input {
     min-width: 0;
     outline: none;
     border: none;
@@ -35,18 +35,18 @@
     margin-right: 0.5rem;
 }
 
-.kuliner-container .search-bar .search-input::placeholder {
+:is(.recipe-container, .kuliner-container) .search-bar .search-input::placeholder {
     color: #e8eaed;
 }
 
-.kuliner-container .search-bar .search-btn {
+:is(.recipe-container, .kuliner-container) .search-bar .search-btn {
     background-color: transparent;
     outline: none;
     border: none;
     color: white;
 }
 
-.kuliner-container .search-bar .search-btn:focus-visible {
+:is(.recipe-container, .kuliner-container) .search-bar .search-btn:focus-visible {
     outline: 0.5px solid #8ab4f8;
 }
 

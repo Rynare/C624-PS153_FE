@@ -22,7 +22,7 @@ template.innerHTML = `
                 <span class="ms-2">30 Menit</span>
             </div>
             <div class="fw-semibold recipe-difficulty">
-                <i class="bi bi-speedometer2"></i>
+                <i class="bi bi-graph-up"></i>
                 <span class="ms-2">Easy</span>
             </div>
             <div class="fw-semibold recipe-calories">

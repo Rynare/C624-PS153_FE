@@ -155,3 +155,17 @@ button[is=switch-button].like-btn {
     border: none;
     color: red;
 }
+
+.scrollToTop {
+    position: fixed;
+    right: 10px;
+    top: 100%;
+    background-color: crimson !important;
+    border: none !important;
+    color: white !important;
+    font-size: 100%;
+    font-weight: bold;
+    height: 44px;
+    width: 44px;
+    transition: ease-in-out 300ms;
+}
