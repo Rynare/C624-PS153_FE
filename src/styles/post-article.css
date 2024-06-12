@@ -1,0 +1,28 @@
+.post-article #new-description {
+    height: 14rem;
+    overflow-y: scroll;
+}
+
+.post-recipe #new-description {
+    height: 8rem;
+    max-height: 14rem;
+    overflow-y: scroll;
+}
+
+:is(.post-recipe, .post-article) form {
+    max-width: 600px;
+}
+
+.post-recipe .new-ingredients-wrapper tags {
+    max-height: 300px;
+}
+
+:is(.post-recipe, .post-article) .back-nav {
+    max-width: 650px;
+    margin: auto;
+}
+
+:is(.post-recipe, .post-article) .form-text {
+    color: grey;
+    margin-left: 1rem;
+}

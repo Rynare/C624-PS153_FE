@@ -1,0 +1,66 @@
+<div class="post-article mt-2 px-2 mb-4">
+    <div class="position-sticky top-0 p-2 mb-3 rounded bg-white z-3 shadow back-nav">
+        <a href="/artikel" is="link-router" class="nav-link text-danger fw-bold">
+            <i class="bi bi-chevron-left"></i>
+            <span>Kembali</span>
+        </a>
+    </div>
+    <form action="" class="text-white rounded p-2 px-3 mx-auto" enctype="multipart/form-data">
+        <div class="mb-3 new-thumbnail-wrapper">
+            <label for="new-thumbnail" class="form-label">Thumbnail <span class="badge text-bg-danger">max:
+                    2mb</span></label>
+            <input type="file" id="new-thumbnail" name="thumbnail" accept="image/jpeg, image/jpg, image/webp" size=""
+                class="form-control ms-2">
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="preview-container mb-3">
+            <div style="width: 100%; aspect-ratio: 3/2;"
+                class="d-flex align-items-center justify-content-center bg-secondary">
+                <img id="thumbnail-preview" src="" alt="Image Preview" style="max-width: 100%;max-height: 100%;">
+            </div>
+        </div>
+        <div class="mb-3 new-title-wrapper">
+            <label for="new-title" class="form-label">Judul</label>
+            <input type="text" class="form-control ms-2" name="title" id="new-title"
+                placeholder="Masukkan judul yang menarik...">
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="mb-3 new-slug-wrapper">
+            <label for="new-slug" class="form-label">Slug</label>
+            <div class="input-group has-validation">
+                <input type="text" class="form-control ms-2 z-1" name="slug" id="new-slug"
+                    placeholder="ini-adalah-contoh-slug..." aria-describedby="slug-validation-feedback">
+                <button type="button" class="btn btn-secondary check-slug-btn">
+                    <i class="bi bi-fingerprint"></i>
+                </button>
+                <div class="invalid-feedback" id="slug-validation-feedback"></div>
+            </div>
+        </div>
+        <div class="mb-3 new-category-wrapper">
+            <label for="new-kategori" class="form-label">Kategori</label>
+            <select class="form-select text-capitalize ms-2" aria-label="Pilih kategori artikel" name="category"
+                id="new-kategori">
+                <option selected hidden disabled>Pilih kategori</option>
+            </select>
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="mb-3 new-description-wrapper">
+            <label for="new-description" class="form-label">Artikel</label>
+            <div class="bg-white rounded overflow-hidden ms-2">
+                <div id="new-description" class="text-black"></div>
+            </div>
+        </div>
+        <div class="w-100 d-flex mt-3">
+            <button type="submit" class="mx-auto btn btn-primary">Submit</button>
+        </div>
+    </form>
+    <style>
+        #app~footer.text-center.py-1.mt-4.text-white {
+            display: none !important;
+        }
+
+        body nav.z-3.d-flex.flex-column.w-100 {
+            display: none !important;
+        }
+    </style>
+</div>

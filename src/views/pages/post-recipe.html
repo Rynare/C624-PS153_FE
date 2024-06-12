@@ -1,0 +1,130 @@
+<div class="post-recipe mt-2 px-2 mb-4">
+    <div class="position-sticky top-0 p-2 mb-3 rounded bg-white z-3 shadow back-nav">
+        <a href="/resep" is="link-router" class="nav-link text-danger fw-bold">
+            <i class="bi bi-chevron-left"></i>
+            <span>Kembali</span>
+        </a>
+    </div>
+    <form action="" class="text-white rounded p-2 px-3 mx-auto" enctype="multipart/form-data">
+        <div class="mb-3 new-thumbnail-wrapper">
+            <label for="new-thumbnail" class="form-label">Thumbnail <span class="badge text-bg-danger">max:
+                    2mb</span></label>
+            <input type="file" id="new-thumbnail" name="thumbnail" accept="image/jpeg, image/jpg, image/webp"
+                max-size="2" class="form-control ms-2" required is="input-file">
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="preview-container mb-3">
+            <div style="width: 100%; aspect-ratio: 3/2;"
+                class="d-flex align-items-center justify-content-center bg-secondary">
+                <img id="thumbnail-preview" src="" alt="Image Preview" style="max-width: 100%;max-height: 100%;">
+            </div>
+        </div>
+        <div class="mb-3 new-title-wrapper">
+            <label for="new-title" class="form-label">Judul</label>
+            <input type="text" class="form-control ms-2" name="title" id="new-title"
+                placeholder="Masukkan judul yang menarik..." required>
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="mb-3 new-slug-wrapper">
+            <label for="new-slug" class="form-label">Slug</label>
+            <div class="input-group has-validation">
+                <input type="text" class="form-control ms-2 z-1" name="slug" id="new-slug"
+                    placeholder="ini-adalah-contoh-slug..." aria-describedby="slug-validation-feedback" required>
+                <button type="button" class="btn btn-secondary check-slug-btn">
+                    <i class="bi bi-fingerprint"></i>
+                </button>
+                <div class="invalid-feedback" id="slug-validation-feedback"></div>
+            </div>
+        </div>
+        <div class="mb-3 new-duration-wrapper">
+            <label for="new-duration" class="form-label">Durasi memasak</label>
+            <select class="form-select text-capitalize ms-2" aria-label="Pilih durasi memasak" name="duration"
+                id="new-duration" required>
+                <option selected hidden disabled>Pilih durasi memasak</option>
+                <option value="00:30:00">30 Menit atau kurang</option>
+                <option value="00:45:00">45 Menit</option>
+                <option value="01:00:00">1 jam</option>
+                <option value="01:00:01">Lebih dari 1 jam</option>
+            </select>
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="mb-3 new-description-wrapper">
+            <label for="new-description" class="form-label">Deskripsi singkat</label>
+            <div class="bg-white rounded overflow-hidden ms-2">
+                <div id="new-description" class="text-black"></div>
+            </div>
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="mb-3 new-difficulty-wrapper">
+            <div class="form-label">Tingkat kesulitan</div>
+            <div class="ms-2 me-3 d-inline-block">
+                <input class="form-check-input" type="radio" name="difficulty" required id="new-difficulty-easy"
+                    value="easy">
+                <label class="form-check-label" for="new-difficulty-easy">Mudah</label>
+            </div>
+            <div class="ms-1 me-3 d-inline-block">
+                <input class="form-check-input" type="radio" name="difficulty" required id="new-difficulty-medium"
+                    value="medium">
+                <label class="form-check-label" for="new-difficulty-medium">Sedang</label>
+            </div>
+            <div class="ms-1 me-3 d-inline-block">
+                <input class="form-check-input" type="radio" name="difficulty" required id="new-difficulty-hard"
+                    value="hard">
+                <label class="form-check-label" for="new-difficulty-hard">Sulit</label>
+            </div>
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="mb-3 new-calories-wrapper">
+            <label for="new-calories" class="form-label">Kalori</label>
+            <input type="number" name="calories" id="new-calories" class="form-control ms-2" inputmode="numeric"
+                required>
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="mb-3 new-portion-wrapper">
+            <label for="new-portion" class="form-label">Porsi</label>
+            <input type="number" name="portion" id="new-portion" class="form-control ms-2" inputmode="numeric" min="1"
+                max="10" required>
+            <div class="form-text">Min: 1 , Max: 10</div>
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="mb-3 new-ingredients-wrapper">
+            <label for="new-ingredients" class="form-label">Bahan-bahan</label>
+            <input type="text" name="ingredients" id="new-ingredients"
+                class="form-control ms-2 direction-column list-style-number" required>
+            <div class="form-text">Tekan enter untuk menambahkan bahan lainnya</div>
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="mb-3 new-tips-wrapper">
+            <label for="new-tips" class="form-label">Tips</label>
+            <input type="text" name="tips" id="new-tips" class="form-control ms-2 direction-column list-style-number"
+                required>
+            <div class="form-text">Tekan enter untuk menambahkan Tips lainnya</div>
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="mb-3 new-steps-wrapper">
+            <label for="new-steps" class="form-label">Langkah-langkah</label>
+            <input type="text" name="steps" id="new-steps" class="form-control ms-2 direction-column list-style-number"
+                required>
+            <div class="form-text">Tekan enter untuk menambahkan langkah lainnya</div>
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="mb-3 new-tags-wrapper">
+            <label for="new-tags" class="form-label">Tags</label>
+            <input type="text" name="tags" id="new-tags" class="form-control ms-2" required>
+            <div class="form-text">Tekan enter untuk menambahkan Tags lainnya</div>
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="w-100 d-flex mt-3">
+            <button type="submit" class="mx-auto btn btn-primary">Submit</button>
+        </div>
+    </form>
+    <style>
+        #app~footer.text-center.py-1.mt-4.text-white {
+            display: none !important;
+        }
+
+        body nav.z-3.d-flex.flex-column.w-100 {
+            display: none !important;
+        }
+    </style>
+</div>
