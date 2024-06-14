@@ -72,7 +72,7 @@ class KulinerController extends Controller {
 
     const makeNewPostBtn = document.querySelector(".new-post-btn");
     makeNewPostBtn.addEventListener("click", () => {
-      if (this._loginController.getCurrentUser().isSignedIn) {
+      if (LoginController.currentUser.isSignedIn) {
         makeNewPostBtn.querySelector("a").click();
       } else {
         this._loginController.doSignin();
@@ -118,11 +118,9 @@ class KulinerController extends Controller {
     const articleDetailContainer = document.querySelector(".article-detail-container");
 
     const commentOAuth = this._loginController;
-    commentOAuth.setOnSigninAction(afterSignin);
-    commentOAuth.setOnSignoutAction(afterSignout);
     commentOAuth.init();
 
-    $.get(`${process.env.API_ENDPOINT}/api/article/detail/${Controller.parameters.slug}?user=${commentOAuth?.getCurrentUser()?.userData?.id_user || JSON.parse(localStorage?.currentUser || "{}")?.userData?.id_user || ""}`).done((response) => {
+    $.get(`${process.env.API_ENDPOINT}/api/article/detail/${Controller.parameters.slug}?user=${LoginController?.currentUser?.userData?.id_user || JSON.parse(localStorage?.currentUser || "{}")?.userData?.id_user || ""}`).done((response) => {
       const { results } = response;
       const {
         authorName, datePublished, category: { name: categoryName }, description, _id,
@@ -150,7 +148,7 @@ class KulinerController extends Controller {
       likeBtn.querySelector("button.like-btn").setAttribute("is-active", isLiked);
 
       likeBtn.addEventListener("click", () => {
-        const { isSignedIn, userData } = commentOAuth.getCurrentUser();
+        const { isSignedIn, userData } = LoginController.currentUser;
         if (isSignedIn) {
           const {
             id_user: userID, email, uid,
@@ -187,24 +185,28 @@ class KulinerController extends Controller {
     };
     const quill = new Quill("#komentar-editor", options);
 
-    function loadCommentProfilePicture() {
-      const { userData: { profilePicture, defaultProfilePicture } } = commentOAuth.getCurrentUser();
-      articleDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", profilePicture || defaultProfilePicture || "public/img/img-not-found.png");
+    loadCommentProfilePicture();
+
+    function loadCommentProfilePicture(signinData = (LoginController.currentUser || JSON.parse(localStorage.currentUser) || { isSignedIn: false })) {
+      const { isSignedIn, userData } = signinData;
+      if (isSignedIn) {
+        const { profilePicture, defaultProfilePicture } = userData;
+        articleDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", profilePicture || defaultProfilePicture);
+      } else {
+        articleDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", "public/img/img-not-found.png");
+      }
     }
 
-    document.body.addEventListener("user-signed", () => {
-      loadCommentProfilePicture();
+    document.body.addEventListener("user-signed-in", (evt) => {
+      loadCommentProfilePicture(evt.detail);
     });
 
-    function afterSignin() {
-      loadCommentProfilePicture();
-    }
-    function afterSignout() {
+    document.body.addEventListener("user-signed-out", () => {
       articleDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", "public/img/defaultProfilePicture.png");
-    }
+    });
 
     document.querySelector(".new-comment-editor-container button.post-new-comment ").addEventListener("click", () => {
-      const { isSignedIn, userData } = commentOAuth.getCurrentUser();
+      const { isSignedIn, userData } = LoginController.currentUser;
       if (isSignedIn) {
         const {
           id_user: userID, email, uid, profilePicture, displayName,
@@ -224,7 +226,6 @@ class KulinerController extends Controller {
             document.querySelector(".comment-container").insertBefore(commentCard, document.querySelector(".comment-container>div:nth-child(1)"));
           })
             .fail((error) => {
-              console.error("Error ketika mengirim komentar:", error);
             });
         }
       } else {

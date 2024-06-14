@@ -7,34 +7,19 @@ import {
   signOut,
 } from "firebase/auth";
 import { initializeApp, getApps } from "firebase/app";
+import $ from "jquery";
 import { firebaseConfig } from "../Auth/FirebaseSetup.js";
 
+function afterRenderAct() {
+  document.querySelector(".pizza-loader-container").classList.add("d-none");
+  document.querySelector(".pizza-loader-container").style.backgroundColor = "transparent";
+  document.querySelector(".pizza-loader-container").style.backdropFilter = "brightness(0.5)";
+}
 class LoginController {
-  static userLoginInformation = {};
-
-  #onSigninAction = () => console.log("Yeay! Kamu berhasil login.");
-
-  #onSignoutAction = () => console.log("Yahh... Kamu telah keluar.");
+  static currentUser = { isSignedIn: false };
 
   constructor(isCore = false) {
-    this.isCore = false;
-    if ([false, true, 0, 1].includes(isCore)) {
-      if (isCore === 1 || isCore === true) {
-        this.isCore = true;
-      } else {
-        this.isCore = false;
-      }
-    } else {
-      this.isCore = false;
-    }
-  }
-
-  get onSigninAction() {
-    return this.#onSigninAction;
-  }
-
-  get onSignoutAction() {
-    return this.#onSignoutAction;
+    this.isCore = Boolean(isCore);
   }
 
   init() {
@@ -45,65 +30,86 @@ class LoginController {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         const {
-          displayName, uid, email, photoURL,
+          displayName: authDisplayName, uid: authUID, email: authEmail, photoURL: authPhotoURL,
         } = user;
         if (this.isCore) {
-          Object.assign(LoginController.userLoginInformation, {
-            displayName, uid, email, defaultProfilePicture: photoURL,
+          $.post(
+            `${process.env.API_ENDPOINT}/api/auth`,
+            {
+              uid: authUID,
+              email: authEmail,
+              name: authDisplayName,
+              profilePicture: authPhotoURL,
+            },
+            (response) => {
+              const {
+                details: {
+                  id: responseID,
+                  profilePicture: responseProfilePicture,
+                  name: responseName,
+                  uid: responseUID,
+                  email: responseEmail,
+                },
+              } = response;
+              LoginController.currentUser = {
+                isSignedIn: true,
+                userData: {
+                  defaultProfilePicture: authPhotoURL,
+                  id_user: responseID,
+                  profilePicture: responseProfilePicture,
+                  displayName: responseName,
+                  uid: responseUID,
+                  email: responseEmail,
+                },
+              };
+
+              localStorage.setItem("currentUser", JSON.stringify(LoginController.currentUser));
+
+              const signinEvent = new CustomEvent("user-signed-in", {
+                detail: LoginController.currentUser,
+              });
+
+              document.body.dispatchEvent(signinEvent);
+              afterRenderAct();
+            },
+          ).fail((jqXHR, textStatus, errorThrown) => {
           });
         }
-        await this.onSigninAction();
-        localStorage.setItem("currentUser", JSON.stringify(this.getCurrentUser()));
       } else {
         if (this.isCore) {
-          LoginController.userLoginInformation = {};
+          LoginController.currentUser = {
+            isSignedIn: false,
+            userData: null,
+          };
         }
-        await this.onSignoutAction();
-        localStorage.setItem("currentUser", JSON.stringify(this.getCurrentUser()));
+        localStorage.setItem("currentUser", JSON.stringify(LoginController.currentUser));
+
+        const signoutEvent = new CustomEvent("user-signed-out", {
+          detail: LoginController.currentUser,
+        });
+
+        document.body.dispatchEvent(signoutEvent);
+        afterRenderAct();
       }
     });
-  }
-
-  getCurrentUser() {
-    const currentUser = getAuth().currentUser;
-    const isSignedIn = !!currentUser;
-    return {
-      isSignedIn,
-      userData: isSignedIn ? {
-        ...LoginController.userLoginInformation,
-      } : null,
-    };
-  }
-
-  setMoreUserDetails(details) {
-    if (typeof details === "object") {
-      Object.assign(LoginController.userLoginInformation, { ...details });
-      localStorage.setItem("currentUser", JSON.stringify(this.getCurrentUser()));
-    } else {
-      throw new Error("Parameter harus berupa object");
-    }
   }
 
   async doSignin() {
     const auth = getAuth();
     const googleProvider = new GoogleAuthProvider();
 
-    function isMobile() {
-      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-      return /android|iPad|iPhone|iPod/.test(userAgent);
-    }
+    const isMobile = () => /android|iPad|iPhone|iPod/.test(navigator.userAgent || navigator.vendor || window.opera);
+
     try {
       if (isMobile()) {
         await signInWithRedirect(auth, googleProvider);
       } else {
         await signInWithPopup(auth, googleProvider);
       }
-      window.location.reload();
     } catch (error) {
       const {
         code, message, email, credential,
       } = error;
-      console.error("Error ketika sign-in:", code, message, email, credential);
     }
   }
 
@@ -111,18 +117,8 @@ class LoginController {
     const auth = getAuth();
     try {
       await signOut(auth);
-      window.location.reload();
     } catch (error) {
-      console.error("Error ketika sign-out:", error);
     }
-  }
-
-  setOnSigninAction(callback) {
-    this.#onSigninAction = callback;
-  }
-
-  setOnSignoutAction(callback) {
-    this.#onSignoutAction = callback;
   }
 }
 

@@ -105,7 +105,7 @@ module.exports = {
       swDest: "sw.bundle.js",
       // maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
     }),
-    new BundleAnalyzerPlugin(),
+    process.env.BUNDLE_ANALYZER === "1" ? new BundleAnalyzerPlugin() : "",
     new ImageminWebpWebpackPlugin({
       config: [
         {

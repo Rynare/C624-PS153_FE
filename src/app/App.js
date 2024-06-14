@@ -30,7 +30,6 @@ class App {
       filteredRoutes = routes.filter((cursor) => compareUrlWithPattern(currentPath, cursor.pattern));
       // Jika tetap 2 maka throw error
       if (filteredRoutes.length >= 2) {
-        console.error(`Multiple routes: \n\t${filteredRoutes.map((cursor) => `'${cursor.pattern}'`).join(",\n\t")}`);
         throw new Error("Multiple matching routes found.");
       }
       doAction = filteredRoutes[0].action;

@@ -1,12 +1,11 @@
 // eslint-disable-next-line import/named
-import $ from "jquery";
 import { App } from "./app/App.js";
 import { LoginController } from "./app/controller/LoginController.js";
+import { ProfileController } from "./app/controller/ProfileController.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+  document.querySelector(".style-before-load").remove();
   const googleOAuth = new LoginController(true);
-  googleOAuth.setOnSigninAction(afterSignin);
-  googleOAuth.setOnSignoutAction(afterSignout);
   googleOAuth.init();
 
   const app = new App();
@@ -25,58 +24,33 @@ document.addEventListener("DOMContentLoaded", () => {
     logoutBtn.addEventListener("click", googleOAuth.doSignout);
   });
 
-  function afterSignin() {
+  document.body.addEventListener("user-signed-in", (evt) => {
     const {
       userData: {
-        uid, displayName, email, defaultProfilePicture,
+        displayName, profilePicture,
       },
-    } = googleOAuth.getCurrentUser();
-
-    $.post(
-      `${process.env.API_ENDPOINT}/api/auth`,
-      {
-        uid,
-        email,
-        name: displayName,
-        profilePicture: defaultProfilePicture,
-      },
-      (response) => {
-        const { details: { id: signID, profilePicture } } = response;
-        googleOAuth.setMoreUserDetails({ id_user: signID, profilePicture });
-
-        const signinEvent = new CustomEvent("user-signed", {
-          detail: {
-            ...googleOAuth.getCurrentUser(),
-          },
-        });
-
-        document.body.dispatchEvent(signinEvent);
-
-        loginBtns.forEach((loginBtn) => {
-          loginBtn.classList.add("d-none");
-        });
-
-        userOptionBtns.forEach((userOptionBtn) => {
-          userOptionBtn.classList.remove("d-none");
-        });
-
-        mobileSignOption.querySelector(".short-info").classList.remove("d-none");
-        mobileSignOption.querySelector(".short-info #signin-username").textContent = displayName;
-        profilePictureElems.forEach((profilePictureElem) => {
-          profilePictureElem.classList.remove("d-none");
-          const img = profilePictureElem.querySelector("img");
-          img.setAttribute("src", `${profilePicture}`);
-          img.addEventListener("error", () => {
-            img.setAttribute("src", "/public/img/defaultProfilePicture.png");
-          });
-        });
-      },
-    ).fail((jqXHR, textStatus, errorThrown) => {
-      console.log("Error:", textStatus, errorThrown);
+    } = evt.detail;
+    loginBtns.forEach((loginBtn) => {
+      loginBtn.classList.add("d-none");
     });
-  }
 
-  function afterSignout() {
+    userOptionBtns.forEach((userOptionBtn) => {
+      userOptionBtn.classList.remove("d-none");
+    });
+
+    mobileSignOption.querySelector(".short-info").classList.remove("d-none");
+    mobileSignOption.querySelector(".short-info #signin-username").textContent = displayName;
+    profilePictureElems.forEach((profilePictureElem) => {
+      profilePictureElem.classList.remove("d-none");
+      const img = profilePictureElem.querySelector("img");
+      img.setAttribute("src", `${profilePicture}`);
+      img.addEventListener("error", () => {
+        img.setAttribute("src", "/public/img/defaultProfilePicture.png");
+      });
+    });
+  });
+
+  document.body.addEventListener("user-signed-out", () => {
     loginBtns.forEach((loginBtn) => {
       loginBtn.classList.remove("d-none");
     });
@@ -93,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
       profilePictureElem.classList.add("d-none");
       img.removeAttribute("src");
     });
-  }
+  });
 
   function getBaseUrl(url) {
     let secondSlash = false;
@@ -184,4 +158,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
+
+  new ProfileController().init();
 });

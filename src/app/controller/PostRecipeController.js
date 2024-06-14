@@ -14,7 +14,7 @@ class PostRecipeController extends Controller {
   }
 
   async index() {
-    if (!(this._loginState.getCurrentUser().isSignedIn || JSON.parse(localStorage?.currentUser).isSignedIn)) {
+    if (!(LoginController.currentUser.isSignedIn || JSON.parse(localStorage?.currentUser).isSignedIn)) {
       return;
     }
     await this.view("/pages/post-recipe.html");
@@ -105,25 +105,12 @@ class PostRecipeController extends Controller {
       }
     }
 
-    document.getElementById("new-thumbnail").addEventListener("change", (event) => {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const previewImage = document.getElementById("thumbnail-preview");
-          previewImage.src = e.target.result;
-          previewImage.style.display = "block";
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
     const form = document.querySelector(".post-recipe form");
     form.addEventListener("submit", async (evt) => {
       evt.preventDefault();
       const formdata = new FormData(form);
       if (await isNewPostValid(formdata)) {
-        const { userData: { id_user: userID, uid, email } } = this._loginState.getCurrentUser();
+        const { userData: { id_user: userID, uid, email } } = LoginController.currentUser;
         formdata.append("description", quill.root.innerHTML);
         formdata.append("email", email);
         formdata.append("uid", uid);
@@ -141,14 +128,11 @@ class PostRecipeController extends Controller {
           success(response) {
             const { status, results } = response;
             if (status) {
-              console.log(results);
             }
           },
           error(jqXHR, textStatus, errorThrown) {
-            console.log(textStatus, errorThrown);
           },
         }).fail((error) => {
-          console.log(error);
         });
       }
     });
@@ -168,6 +152,19 @@ class PostRecipeController extends Controller {
           inputFieldTagify.updateValueByDOMTags();
         },
       });
+    });
+
+    document.getElementById("new-thumbnail").addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const previewImage = document.getElementById("thumbnail-preview");
+          previewImage.src = e.target.result;
+          previewImage.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      }
     });
 
     document.querySelector("[name=thumbnail]").addEventListener("fileInvalid", (evt) => {

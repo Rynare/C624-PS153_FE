@@ -25,20 +25,17 @@ function isCacheable(url) {
 const backendAPI = new Route(
   ({ url }) => isCacheable(url.href),
   new StaleWhileRevalidate({
-    cacheName: process.env.HOST,
+    cacheName: process.env.HOST || `${window.location.protocol}//${window.location.hostname}`,
   }),
 );
 
 registerRoute(backendAPI);
 
 self.addEventListener("install", () => {
-  console.log("Service Worker: Installed");
   self.skipWaiting();
 });
 
 self.addEventListener("push", (event) => {
-  console.log("Service Worker: Pushed");
-
   const notificationData = {
     title: "Push Notification",
     options: {

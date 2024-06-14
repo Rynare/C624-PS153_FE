@@ -71,7 +71,7 @@ class ResepController extends Controller {
 
     const makeNewPostBtn = document.querySelector(".new-post-btn");
     makeNewPostBtn.addEventListener("click", () => {
-      if (this._loginController.getCurrentUser().isSignedIn) {
+      if (LoginController.currentUser.isSignedIn) {
         makeNewPostBtn.querySelector("a").click();
       } else {
         this._loginController.doSignin();
@@ -118,26 +118,29 @@ class ResepController extends Controller {
     const recipeDetailContainer = document.querySelector(".recipe-detail-container");
 
     const commentOAuth = new LoginController();
-    commentOAuth.setOnSigninAction(afterSignin);
-    commentOAuth.setOnSignoutAction(afterSignout);
     commentOAuth.init();
 
-    function loadCommentProfilePicture() {
-      const { userData: { profilePicture, defaultProfilePicture } } = commentOAuth.getCurrentUser();
-      recipeDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", profilePicture || defaultProfilePicture || "public/img/img-not-found.png");
+    loadCommentProfilePicture();
+
+    function loadCommentProfilePicture(signinData = (LoginController.currentUser || JSON.parse(localStorage.currentUser) || { isSignedIn: false })) {
+      const { isSignedIn, userData } = signinData;
+      if (isSignedIn) {
+        const { profilePicture, defaultProfilePicture } = userData;
+        recipeDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", profilePicture || defaultProfilePicture);
+      } else {
+        recipeDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", "public/img/img-not-found.png");
+      }
     }
 
-    function afterSignin() {
-      loadCommentProfilePicture();
-    }
-    function afterSignout() {
-      recipeDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", "public/img/defaultProfilePicture.png");
-    }
-
-    document.body.addEventListener("user-signed", () => {
-      loadCommentProfilePicture();
+    document.body.addEventListener("user-signed-in", (evt) => {
+      loadCommentProfilePicture(evt.detail);
     });
-    $.get(`${process.env.API_ENDPOINT}/api/recipe/detail/${Controller.parameters.slug}?user=${commentOAuth?.getCurrentUser()?.userData?.id_user || JSON.parse(localStorage?.currentUser || "{}")?.userData?.id_user || ""}`).done((response) => {
+
+    document.body.addEventListener("user-signed-out", () => {
+      recipeDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", "public/img/defaultProfilePicture.png");
+    });
+
+    $.get(`${process.env.API_ENDPOINT}/api/recipe/detail/${Controller.parameters.slug}?user=${LoginController?.currentUser?.userData?.id_user || JSON.parse(localStorage?.currentUser || "{}")?.userData?.id_user || ""}`).done((response) => {
       const { results } = response;
       const {
         _id, title, thumbnail, datePublished, description, duration, difficulty, calories, portion, ingredients, steps, tips, tags, likeCount, commentCount, authorName, isLiked,
@@ -163,7 +166,7 @@ class ResepController extends Controller {
       likeBtn.querySelector(".like-count").textContent = numberToNotation(likeCount || 0);
       likeBtn.querySelector(".like-btn").setAttribute("is-active", isLiked);
       likeBtn.addEventListener("click", () => {
-        const { isSignedIn, userData } = commentOAuth.getCurrentUser();
+        const { isSignedIn, userData } = LoginController.currentUser;
         if (isSignedIn) {
           const {
             id_user: userID, email, uid,
@@ -229,7 +232,7 @@ class ResepController extends Controller {
     const quill = new Quill("#komentar-editor", options);
 
     document.querySelector(".new-comment-editor-container button.post-new-comment ").addEventListener("click", () => {
-      const { isSignedIn, userData } = commentOAuth.getCurrentUser();
+      const { isSignedIn, userData } = LoginController.currentUser;
       if (isSignedIn) {
         const {
           id_user: userID, email, uid, profilePicture, displayName,
@@ -249,7 +252,6 @@ class ResepController extends Controller {
             document.querySelector(".comment-container").insertBefore(commentCard, document.querySelector(".comment-container>div:nth-child(1)"));
           })
             .fail((error) => {
-              console.error("Error ketika mengirim komentar:", error);
             });
         }
       } else {
@@ -271,7 +273,6 @@ class ResepController extends Controller {
   }
 
   renderComment(recipeID) {
-    console.log(`${process.env.API_ENDPOINT}/api/recipe/comments/${recipeID}/${this._recipeLazyComment}${this._sortBy}`);
     $.get(`${process.env.API_ENDPOINT}/api/recipe/comments/${recipeID}/${this._recipeLazyComment}${this._sortBy}`).done((response) => {
       const commentContainer = document.querySelector(".comment-container");
       if (this._recipeLazyComment === 1) {

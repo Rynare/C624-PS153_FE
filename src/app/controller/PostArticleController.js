@@ -11,7 +11,7 @@ class PostArticleController extends Controller {
   }
 
   async index() {
-    if (!(this._loginState.getCurrentUser().isSignedIn || JSON.parse(localStorage?.currentUser).isSignedIn)) {
+    if (!(LoginController.currentUser.isSignedIn || JSON.parse(localStorage?.currentUser).isSignedIn)) {
       return;
     }
     await this.view("/pages/post-article.html");
@@ -43,7 +43,7 @@ class PostArticleController extends Controller {
 
     document.querySelector(".hero-container").classList.add("d-none");
     const categorySelection = document.querySelector("select#new-kategori");
-    const catArr = ["uncategorized", "tips-masak", "inspirasi-dapur", "makanan-gaya-hidup", "resep-lezat-anti-sisa"];
+    const catArr = ["tips-masak", "inspirasi-dapur", "makanan-gaya-hidup", "resep-lezat-anti-sisa"];
     catArr.forEach((cat) => {
       const option = document.createElement("option");
       option.className = "text-capitalize";
@@ -138,7 +138,7 @@ class PostArticleController extends Controller {
       evt.preventDefault();
       const formdata = new FormData(form);
       if (await isNewPostValid(formdata)) {
-        const { userData: { id_user: userID, uid, email } } = this._loginState.getCurrentUser();
+        const { userData: { id_user: userID, uid, email } } = LoginController.currentUser;
         formdata.append("description", quill.root.innerHTML);
         formdata.append("email", email);
         formdata.append("uid", uid);
@@ -152,29 +152,14 @@ class PostArticleController extends Controller {
           success(response) {
             const { status, results } = response;
             if (status) {
-              console.log(results);
             }
           },
           error(jqXHR, textStatus, errorThrown) {
-            console.log(textStatus, errorThrown);
           },
         }).fail((error) => {
-          console.log(error);
         });
       }
     });
-    // $("#select-tools").selectize({
-    //   maxItems: null,
-    //   valueField: "id",
-    //   labelField: "title",
-    //   searchField: "title",
-    //   options: [
-    //     { id: 1, title: "Spectrometer", url: "http://en.wikipedia.org/wiki/Spectrometers" },
-    //     { id: 2, title: "Star Chart", url: "http://en.wikipedia.org/wiki/Star_chart" },
-    //     { id: 3, title: "Electrical Tape", url: "http://en.wikipedia.org/wiki/Electrical_tape" },
-    //   ],
-    //   create: false,
-    // });
   }
 }
 

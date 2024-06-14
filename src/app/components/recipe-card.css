@@ -74,10 +74,13 @@
 }
 
 .recipe-card.skelleton .skelleton-item {
-    cursor: wait;
     color: transparent;
     background-color: #e0e0e0;
     animation: skeleton-loading 1s linear infinite alternate;
+}
+
+.recipe-card.skelleton {
+    cursor: wait;
 }
 
 @keyframes skeleton-loading {

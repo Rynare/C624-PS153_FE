@@ -7,28 +7,94 @@
     <title>
         <%= htmlWebpackPlugin.options.title %>
     </title>
+    <style class="style-before-load">
+        body {
+            overflow: hidden;
+        }
+    </style>
+    <style>
+        .pizza-loader-container {
+            --pizza-bg-color: #212529;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            display: flex;
+            z-index: 100;
+            background-color: var(--pizza-bg-color);
+        }
+
+        .pizza-loader {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 8px solid #d1914b;
+            box-sizing: border-box;
+            --c: no-repeat radial-gradient(farthest-side, #d64123 94%, #0000);
+            --b: no-repeat radial-gradient(farthest-side, #000 94%, #0000);
+            background:
+                var(--c) 11px 15px,
+                var(--b) 6px 15px,
+                var(--c) 35px 23px,
+                var(--b) 29px 15px,
+                var(--c) 11px 46px,
+                var(--b) 11px 34px,
+                var(--c) 36px 0px,
+                var(--b) 50px 31px,
+                var(--c) 47px 43px,
+                var(--b) 31px 48px,
+                #f6d353;
+            background-size: 15px 15px, 6px 6px;
+            animation: l4 3s infinite;
+        }
+
+        @keyframes l4 {
+            0% {
+                -webkit-mask: conic-gradient(#0000 0, #000 0)
+            }
+
+            16.67% {
+                -webkit-mask: conic-gradient(#0000 60deg, #000 0)
+            }
+
+            33.33% {
+                -webkit-mask: conic-gradient(#0000 120deg, #000 0)
+            }
+
+            50% {
+                -webkit-mask: conic-gradient(#0000 180deg, #000 0)
+            }
+
+            66.67% {
+                -webkit-mask: conic-gradient(#0000 240deg, #000 0)
+            }
+
+            83.33% {
+                -webkit-mask: conic-gradient(#0000 300deg, #000 0)
+            }
+
+            100% {
+                -webkit-mask: conic-gradient(#0000 360deg, #000 0)
+            }
+        }
+    </style>
 </head>
 </head>
 
 <body class="d-flex flex-column min-vh-100 container-fluid overflow-y-scroll px-0 bg-dark ">
-    <div class="modal fade" tabindex="-1" id="signin-modal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Modal body text goes here.</p>
-                </div>
-            </div>
+    <div class="pizza-loader-container">
+        <div class="pizza-loader-wrapper" style="margin: auto;">
+            <div class="pizza-loader"></div>
         </div>
     </div>
     <nav class="z-3 d-flex flex-column w-100">
         <div class="nav-backdrop w-100 position-absolute flex-grow-1 h-100"></div>
         <div
             class="d-flex justify-content-between align-items-center position-fixed z-1 w-100 px-1 px-sm-2 px-md-3 px-xl-4">
-            <a class="web-logo placeholder-glow rounded-circle overflow-hidden ms-2" is="link-router" href="/home">
-                <img alt="" width="44" height="44" class="placeholder bg-secondary rounded-circle overflow-hidden">
+            <a class="web-logo  rounded-circle overflow-hidden ms-2" is="link-router" href="/home">
+                <img alt="qulinery icon" width="44" height="44" class=" bg-secondary rounded-circle overflow-hidden"
+                    src="./public/img/qulinery-sm.png">
             </a>
             <div class="hamburger d-md-none button-44" tabindex="0" data-bs-toggle="offcanvas"
                 data-bs-target="#nav-mobile-offcanvas" aria-controls="nav-mobile-offcanvas">
@@ -44,10 +110,10 @@
                 <div class="offcanvas-body">
                     <div class="h-100 d-flex flex-column px-1 px-sm-4 nav-mobile">
                         <a href="/home" is="link-router" class="button-44 nav-link d-flex align-items-center ">Home</a>
-                        <a href="/artikel" is="link-router"
-                            class="button-44 nav-link  d-flex align-items-center ">Kuliner</a>
                         <a href="/resep" is="link-router"
                             class="button-44 nav-link  d-flex align-items-center ">Resep</a>
+                        <a href="/artikel" is="link-router"
+                            class="button-44 nav-link  d-flex align-items-center ">Artikel</a>
                         <div class="dropdown mt-auto w-100  sign-option">
                             <div class="w-100 d-flex">
                                 <button type="button"
@@ -66,16 +132,13 @@
                                     </span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <!-- <li><a class="dropdown-item" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li> -->
                                     <li><button type="button" class="dropdown-item my-profile-btn"
                                             data-bs-toggle="modal" data-bs-target="#my-profile">
                                             Profileku
                                         </button></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
                                     <li><button class="dropdown-item logout-btn">Keluar</button></li>
                                 </ul>
                             </div>
@@ -85,8 +148,8 @@
             </div>
             <div class="d-none d-md-flex align-items-center nav-desktop position-relative column-gap-2 text-white">
                 <a href="/home" is="link-router" class="nav-link button-44 px-2 "><span>Home</span></a>
-                <a href="/artikel" is="link-router" class="nav-link button-44 px-2 "><span>Kuliner</span></a>
                 <a href="/resep" is="link-router" class="nav-link button-44 px-2 "><span>Resep</span></a>
+                <a href="/artikel" is="link-router" class="nav-link button-44 px-2 "><span>Artikel</span></a>
                 <div class="dropdown sign-option">
                     <button class="btn btn-outline-success bg-success-subtle pt-1 login-btn">Masuk</button>
                     <a class="btn align-items-center column-gap-1 py-0 user-option-btn" href="javascript:void(0)"
@@ -101,6 +164,9 @@
                                 data-bs-target="#my-profile">
                                 Profileku
                             </button>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
                         </li>
                         <li><button class="dropdown-item logout-btn">
                                 Keluar
@@ -146,38 +212,69 @@
             </div>
         </footer>
     </div>
-    <div class="modal fade" id="my-profile" data-bs-keyboard="false" tabindex="-1" aria-labelledby="my-profileLabel"
-        aria-hidden="true" tabindex="-1">
+    <div class="modal fade skelleton" id="my-profile" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="my-profileLabel" aria-hidden="true" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form action="" id="my-profile-form">
-                    <div class="modal-body">
-                        <div class="container d-flex justify-content-center align-items-center">
-                            <div class="card">
-                                <div class="upper">
-                                    <img src="https://i.imgur.com/Qtrsrk5.jpg" class="img-fluid">
+                <form id="my-profile-form">
+                    <div class="modal-body p-0">
+                        <div class="container d-flex justify-content-center align-items-center px-0">
+                            <div class="card p-0 w-100 overflow-hidden">
+                                <div class="banner overflow-hidden">
+                                    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect width='100' height='100' fill='transparent'/></svg>"
+                                        class="img-fluid">
                                 </div>
-                                <div class="user text-center">
-                                    <div class="profile">
-                                        <img src="https://i.imgur.com/JgYD2nQ.jpg" class="rounded-circle" width="80">
+                                <div class="profile-content">
+                                    <div
+                                        class="profile-img text-center d-flex justify-content-center align-items-center">
+                                        <img src="" class="rounded-circle skelleton-items" width="80">
+                                        <input type="file" name="profilePicture" hidden id="personal-info-picture"
+                                            is="input-file" accept="image/jpeg, image/jpg, image/webp" max-size="2">
+                                        <label for="personal-info-picture">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </label>
                                     </div>
-                                </div>
-                                <div class="mt-5 text-center">
-                                    <h4 class="mb-0">Benjamin Tims</h4>
-                                    <span class="text-muted d-block mb-2">Los Angles</span>
-                                    <button class="btn btn-primary btn-sm follow">Follow</button>
-                                    <div class="d-flex justify-content-between align-items-center mt-4 px-4">
-                                        <div class="stats">
-                                            <h6 class="mb-0">Followers</h6>
-                                            <span>8,797</span>
+                                    <div class="text-center profile-info">
+                                        <div class="personal-info mb-1">
+                                            <div class="is-editable">
+                                                <label for="personal-info-name"><i
+                                                        class="bi bi-pencil-fill"></i></label>
+                                                <input type="text" class="user-display-name" name="name"
+                                                    id="personal-info-name" hidden>
+                                                <span class="user-display-name skelleton-items"
+                                                    contenteditable="false">fahim</span>
+                                            </div>
                                         </div>
-                                        <div class="stats">
-                                            <h6 class="mb-0">Projects</h6>
-                                            <span>142</span>
+                                        <div class="personal-info  mb-1">
+                                            <span class="text-truncate user-email skelleton-items"
+                                                id="personal-info-email" disabled>user@gmail.com</span>
                                         </div>
-                                        <div class="stats">
-                                            <h6 class="mb-0">Ranks</h6>
-                                            <span>129</span>
+                                        <div class="personal-info mb-1">
+                                            <span class="text-truncate user-uid skelleton-items">990jawd8i90</span>
+                                        </div>
+                                        <div class="d-flex mt-4 user-more-info">
+                                            <div class="contribution">
+                                                <h5 class="border-1 border-bottom pb-1">Kontribusi</h5>
+                                                <div class="article-stats">
+                                                    <span class="user-article-posted skelleton-items">8,797</span>
+                                                    <h6 class="mb-0">Artikel</h6>
+                                                </div>
+                                                <div class="recipe-stats">
+                                                    <span class="user-recipe-posted skelleton-items">142</span>
+                                                    <h6 class="mb-0">Resep</h6>
+                                                </div>
+                                            </div>
+                                            <div class="activities">
+                                                <h5 class="border-1 border-bottom pb-1">Aktifitas</h5>
+                                                <a is="link-router" href="/liked-recipe" class="article-stats nav-link">
+                                                    <span class="user-liked-recipe skelleton-items">8,797</span>
+                                                    <h6 class="mb-0">Resep Disukai</h6>
+                                                </a>
+                                                <a is="link-router" href="/liked-article" class="recipe-stats nav-link">
+                                                    <span class="user-liked-article skelleton-items">142</span>
+                                                    <h6 class="mb-0">Artikel Disukai</h6>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -186,7 +283,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="button" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
                 </form>
             </div>
