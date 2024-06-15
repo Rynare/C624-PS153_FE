@@ -1,6 +1,7 @@
 import $ from "jquery";
 import Quill from "quill";
 import moment from "moment";
+import Swal from "sweetalert2";
 import { Controller } from "./Controller.js";
 import { LoginController } from "./LoginController.js";
 import { numberToNotation } from "../../utils/helper/number-to-notation.js";
@@ -55,6 +56,14 @@ class ResepController extends Controller {
           if (!this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/recipes/page/${this._recipeLazyPage}`;
           if (this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/recipes/search/${this._keyword}/${this._recipeLazyPage}`;
         }
+      }).fail(() => {
+        Swal.fire({
+          title: "Error",
+          showDenyButton: true,
+          denyButtonText: "Tutup",
+          icon: "error",
+          text: "Gagal mendapatkan data. Periksa koneksi internet anda.",
+        });
       });
     };
 
@@ -128,7 +137,7 @@ class ResepController extends Controller {
         const { profilePicture, defaultProfilePicture } = userData;
         recipeDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", profilePicture || defaultProfilePicture);
       } else {
-        recipeDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", "public/img/img-not-found.png");
+        recipeDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", "public/img/img-not-found.webp");
       }
     }
 
@@ -137,13 +146,13 @@ class ResepController extends Controller {
     });
 
     document.body.addEventListener("user-signed-out", () => {
-      recipeDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", "public/img/defaultProfilePicture.png");
+      recipeDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", "public/img/defaultProfilePicture.webp");
     });
 
     $.get(`${process.env.API_ENDPOINT}/api/recipe/detail/${Controller.parameters.slug}?user=${LoginController?.currentUser?.userData?.id_user || JSON.parse(localStorage?.currentUser || "{}")?.userData?.id_user || ""}`).done((response) => {
       const { results } = response;
       const {
-        _id, title, thumbnail, datePublished, description, duration, difficulty, calories, portion, ingredients, steps, tips, tags, likeCount, commentCount, authorName, isLiked,
+        _id, title, thumbnail, datePublished, description, duration, difficulty, calories, portion, ingredients, steps, tips, tags, likeCount, commentCount, authorName, isLiked, authorUID,
       } = results;
       recipeID = _id;
       const badgeClass = {
@@ -158,7 +167,7 @@ class ResepController extends Controller {
       recipeDetailContainer.querySelector(".date-published").textContent = moment(datePublished).format("dddd, DD MMM YYYY");
       recipeDetailContainer.querySelector(".recipe-thumbnail-img img").setAttribute("src", thumbnail);
       recipeDetailContainer.querySelector(".recipe-thumbnail-img img").addEventListener("error", () => {
-        recipeDetailContainer.querySelector(".recipe-thumbnail-img img").setAttribute("src", "/public/img/img-not-found.png");
+        recipeDetailContainer.querySelector(".recipe-thumbnail-img img").setAttribute("src", "/public/img/img-not-found.webp");
       });
       recipeDetailContainer.querySelector(".recipe-detail-body-description").innerHTML = `<p>${description}</p>`;
       recipeDetailContainer.querySelector(".comment-count").textContent = numberToNotation(commentCount || 0);
@@ -176,11 +185,69 @@ class ResepController extends Controller {
           }).done((likeRes) => {
             likeBtn.querySelector("button.like-btn").setAttribute("is-active", likeRes.isLike);
             likeBtn.querySelector(".like-count").textContent = numberToNotation(likeRes?.likeCount || 0);
+          }).fail((errorResponse) => {
+            Swal.fire({
+              title: "Error",
+              showDenyButton: true,
+              denyButtonText: "Tutup",
+              icon: "error",
+              text: errorResponse?.error?.error_status || "Gagal memberikan like. Periksa koneksi internet anda.",
+            });
           });
         } else {
           commentOAuth.doSignin();
         }
       });
+      if (LoginController.currentUser.isSignedIn || JSON.parse(localStorage?.currentUser).isSignedIn) {
+        if ([(LoginController?.currentUser?.userData?.uid || -1), JSON.parse(localStorage.currentUser).userData.uid].includes(authorUID)) {
+          const deleteBtn = document.querySelector(".recipe-detail-container .delete-content");
+          deleteBtn.classList.remove("d-none");
+          deleteBtn.addEventListener("click", () => {
+            Swal.fire({
+              title: "Konfirmasi",
+              text: `Apakah kamu ingin menghapus ${title}?`,
+              showCancelButton: true,
+              confirmButtonText: "Hapus",
+              cancelButtonText: "Batal",
+              cancelButtonColor: "#28a745",
+              confirmButtonColor: "#dc3545",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                $.ajax({
+                  url: `${process.env.API_ENDPOINT}/api/recipe`,
+                  type: "DELETE",
+                  data: JSON.stringify({
+                    id_recipe: recipeID,
+                    id_user: LoginController.currentUser.userData.id_user,
+                    uid: LoginController.currentUser.userData.uid,
+                    email: LoginController.currentUser.userData.email,
+                  }),
+                  contentType: "application/json",
+                  success(deletedResponse) {
+                    window.location.hash = "#/resep/";
+                    Swal.fire({
+                      showConfirmButton: false,
+                      position: "top-end",
+                      toast: true,
+                      timer: 3000,
+                      icon: "success",
+                      title: deletedResponse?.message || "Resep berhasil dihapus.",
+                    });
+                  },
+                }).fail((errorResponse) => {
+                  Swal.fire({
+                    title: "Error",
+                    showDenyButton: true,
+                    denyButtonText: "Tutup",
+                    icon: "error",
+                    text: errorResponse?.error?.error_status || errorResponse?.message || "Gagal menghapus resep. Periksa koneksi internet anda.",
+                  });
+                });
+              }
+            });
+          });
+        }
+      }
       const durationArr = duration.split(":");
       recipeDetailContainer.querySelector("table .recipe-duration").innerHTML = `:&nbsp;<span>${moment.duration({ hours: durationArr[0], minutes: durationArr[1], seconds: durationArr[2] }).humanize(true)}</span>`;
       recipeDetailContainer.querySelector("table .recipe-calories").innerHTML = `
@@ -211,6 +278,14 @@ class ResepController extends Controller {
         <span class="badge text-bg-danger">${tags.join("</span><span class=\"badge text-bg-danger\">")}</span>
       `;
       this.renderComment(recipeID);
+    }).fail(() => {
+      Swal.fire({
+        title: "Error",
+        showDenyButton: true,
+        denyButtonText: "Tutup",
+        icon: "error",
+        text: "Gagal mendapatkan detail resep. Periksa koneksi internet anda.",
+      });
     });
 
     const toolbarOptions = [
@@ -250,9 +325,15 @@ class ResepController extends Controller {
               name: displayName,
             }));
             document.querySelector(".comment-container").insertBefore(commentCard, document.querySelector(".comment-container>div:nth-child(1)"));
-          })
-            .fail((error) => {
+          }).fail((errorResponse) => {
+            Swal.fire({
+              title: "Error",
+              showDenyButton: true,
+              denyButtonText: "Tutup",
+              icon: "error",
+              text: errorResponse?.error?.error_status || "Gagal memberikan like. Periksa koneksi internet anda.",
             });
+          });
         }
       } else {
         commentOAuth.doSignin();
@@ -291,6 +372,14 @@ class ResepController extends Controller {
         document.getElementById("load-more").classList.remove("d-none");
       }
       if (this._recipeLazyComment !== "last") this._recipeLazyComment += 1;
+    }).fail(() => {
+      Swal.fire({
+        title: "Error",
+        showDenyButton: true,
+        denyButtonText: "Tutup",
+        icon: "error",
+        text: "Gagal mendapatkan komentar lainnya. Periksa koneksi internet anda.",
+      });
     });
   }
 }

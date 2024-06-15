@@ -61,13 +61,29 @@ class ProfileController {
           processData: false,
           contentType: false,
           success(response) {
-            const { status, results } = response;
+            const { status, message } = response;
             if (status) {
+              Swal.fire({
+                timer: 3000,
+                title: message,
+                icon: "success",
+                position: "top-end",
+                toast: true,
+                showConfirmButton: false,
+              });
             }
           },
-          error(jqXHR, textStatus, errorThrown) {
-          },
-        }).fail((error) => {
+          // error(jqXHR, textStatus, errorThrown) {
+          // },
+        }).fail((errorResponse) => {
+          Swal.fire({
+            timer: 3000,
+            title: errorResponse?.error?.error_status || errorResponse.message || "Gagal memberikan komentar. Periksa koneksi internet anda.",
+            icon: "error",
+            position: "top-end",
+            toast: true,
+            showConfirmButton: false,
+          });
         });
       }
     });
@@ -136,6 +152,15 @@ class ProfileController {
         }).done((response) => {
           const { results } = response;
           this.showModalBodyContent(results);
+        }).fail((errorResponse) => {
+          Swal.fire({
+            timer: 3000,
+            title: errorResponse?.error?.error_status || "Gagal memuat profile. Periksa koneksi internet anda.",
+            icon: "error",
+            position: "top-end",
+            toast: true,
+            showConfirmButton: false,
+          });
         });
       }
     });

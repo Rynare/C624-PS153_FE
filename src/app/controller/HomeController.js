@@ -1,4 +1,5 @@
 import $ from "jquery";
+import Swal from "sweetalert2";
 import { Controller } from "./Controller.js";
 import { recipeCardSkelleton } from "../components/recipe-card-skelleton.js";
 import { articleCardSkelleton } from "../components/article-card-skelleton.js";
@@ -35,6 +36,14 @@ class HomeController extends Controller {
         topRecipeCard.setAttribute("json-data", resultStr);
         recipeSlider.appendChild(topRecipeCard);
       });
+    }).fail(() => {
+      Swal.fire({
+        title: "Error",
+        showDenyButton: true,
+        denyButtonText: "Tutup",
+        icon: "error",
+        text: "Gagal mendapatkan daftar resep populer. Periksa koneksi internet anda.",
+      });
     });
 
     $.get(`${process.env.API_ENDPOINT}/api/popular-articles`).done((response) => {
@@ -46,6 +55,14 @@ class HomeController extends Controller {
         topArticleCard.classList.add(..."article-card overflow-hidden rounded".split(" "));
         topArticleCard.setAttribute("json-data", resultStr);
         articleSlider.appendChild(topArticleCard);
+      });
+    }).fail(() => {
+      Swal.fire({
+        title: "Error",
+        showDenyButton: true,
+        denyButtonText: "Tutup",
+        icon: "error",
+        text: "Gagal mendapatkan artikel populer. Periksa koneksi internet anda.",
       });
     });
   }

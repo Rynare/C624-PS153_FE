@@ -1,6 +1,7 @@
 import Quill from "quill";
 import $ from "jquery";
 import moment from "moment";
+import Swal from "sweetalert2";
 import { Controller } from "./Controller.js";
 import { numberToNotation } from "../../utils/helper/number-to-notation.js";
 import { LoginController } from "./LoginController.js";
@@ -55,6 +56,14 @@ class KulinerController extends Controller {
           if (!this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/articles/page/${this._articleLazyPage}`;
           if (this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/articles/search/${this._keyword}/${this._articleLazyPage}`;
         }
+      }).fail(() => {
+        Swal.fire({
+          title: "Error",
+          showDenyButton: true,
+          denyButtonText: "Tutup",
+          icon: "error",
+          text: "Gagal mendapatkan data. Periksa koneksi internet anda.",
+        });
       });
     };
 
@@ -124,7 +133,7 @@ class KulinerController extends Controller {
       const { results } = response;
       const {
         authorName, datePublished, category: { name: categoryName }, description, _id,
-        thumbnail, title, likeCount, commentCount, isLiked,
+        thumbnail, title, likeCount, commentCount, isLiked, authorUID,
       } = results;
       articleID = _id;
       const heroTitle = document.querySelector(".hero-content-wrapper h2");
@@ -135,7 +144,7 @@ class KulinerController extends Controller {
       const thumbnailElem = articleDetailContainer.querySelector(".article-content picture img");
       thumbnailElem.setAttribute("src", thumbnail);
       thumbnailElem.addEventListener("error", () => {
-        thumbnailElem.setAttribute("src", "/public/img/img-not-found.png");
+        thumbnailElem.setAttribute("src", "/public/img/img-not-found.webp");
       });
       articleDetailContainer.querySelector(".article-title").textContent = title;
       articleDetailContainer.querySelector(".author-name").textContent = authorName;
@@ -158,13 +167,80 @@ class KulinerController extends Controller {
           }).done((likeRes) => {
             likeBtn.querySelector("button.like-btn").setAttribute("is-active", likeRes.isLike);
             likeBtn.querySelector(".like-count").textContent = numberToNotation(likeRes?.likeCount);
+          }).fail((errorResponse) => {
+            Swal.fire({
+              title: "Error",
+              showDenyButton: true,
+              denyButtonText: "Tutup",
+              icon: "error",
+              text: errorResponse?.error?.error_status || "Gagal memberikan like. Periksa koneksi internet anda.",
+            });
           });
         } else {
           commentOAuth.doSignin();
         }
       });
 
+      if (LoginController.currentUser.isSignedIn || JSON.parse(localStorage?.currentUser).isSignedIn) {
+        if ([(LoginController?.currentUser?.userData?.uid || -1), JSON.parse(localStorage.currentUser).userData.uid].includes(authorUID)) {
+          const deleteBtn = document.querySelector(".article-detail-container .delete-content");
+          deleteBtn.classList.remove("d-none");
+          deleteBtn.addEventListener("click", () => {
+            Swal.fire({
+              title: "Konfirmasi",
+              text: `Apakah kamu ingin menghapus ${title}?`,
+              showCancelButton: true,
+              confirmButtonText: "Hapus",
+              cancelButtonText: "Batal",
+              cancelButtonColor: "#28a745",
+              confirmButtonColor: "#dc3545",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                $.ajax({
+                  url: `${process.env.API_ENDPOINT}/api/article`,
+                  type: "DELETE",
+                  data: JSON.stringify({
+                    id_article: articleID,
+                    id_user: LoginController.currentUser.userData.id_user,
+                    uid: LoginController.currentUser.userData.uid,
+                    email: LoginController.currentUser.userData.email,
+                  }),
+                  contentType: "application/json",
+                  success(deletedResponse) {
+                    window.location.hash = "#/artikel/";
+                    Swal.fire({
+                      showConfirmButton: false,
+                      toast: true,
+                      position: "top-end",
+                      timer: 3000,
+                      icon: "success",
+                      title: deletedResponse?.message || "Artikel berhasil dihapus.",
+                    });
+                  },
+                }).fail((errorResponse) => {
+                  Swal.fire({
+                    title: "Error",
+                    showDenyButton: true,
+                    denyButtonText: "Tutup",
+                    icon: "error",
+                    text: errorResponse?.error?.error_status || errorResponse?.message || "Gagal menghapus artikel. Periksa koneksi internet anda.",
+                  });
+                });
+              }
+            });
+          });
+        }
+      }
+
       this.renderComment(articleID);
+    }).fail(() => {
+      Swal.fire({
+        title: "Error",
+        showDenyButton: true,
+        denyButtonText: "Tutup",
+        icon: "error",
+        text: "Gagal mendapatkan data. Periksa koneksi internet anda.",
+      });
     });
 
     const toolbarOptions = [
@@ -193,7 +269,7 @@ class KulinerController extends Controller {
         const { profilePicture, defaultProfilePicture } = userData;
         articleDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", profilePicture || defaultProfilePicture);
       } else {
-        articleDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", "public/img/img-not-found.png");
+        articleDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", "public/img/img-not-found.webp");
       }
     }
 
@@ -202,7 +278,7 @@ class KulinerController extends Controller {
     });
 
     document.body.addEventListener("user-signed-out", () => {
-      articleDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", "public/img/defaultProfilePicture.png");
+      articleDetailContainer?.querySelector(".new-comment picture img").setAttribute("src", "public/img/defaultProfilePicture.webp");
     });
 
     document.querySelector(".new-comment-editor-container button.post-new-comment ").addEventListener("click", () => {
@@ -224,9 +300,15 @@ class KulinerController extends Controller {
               name: displayName,
             }));
             document.querySelector(".comment-container").insertBefore(commentCard, document.querySelector(".comment-container>div:nth-child(1)"));
-          })
-            .fail((error) => {
+          }).fail((errorResponse) => {
+            Swal.fire({
+              title: "Error",
+              showDenyButton: true,
+              denyButtonText: "Tutup",
+              icon: "error",
+              text: errorResponse?.error?.error_status || errorResponse?.error || "Gagal memberikan komentar. Periksa koneksi internet anda.",
             });
+          });
         }
       } else {
         commentOAuth.doSignin();
@@ -265,6 +347,14 @@ class KulinerController extends Controller {
         document.getElementById("load-more").classList.remove("d-none");
       }
       if (this._articleLazyComment !== "last") this._articleLazyComment += 1;
+    }).fail(() => {
+      Swal.fire({
+        title: "Error",
+        showDenyButton: true,
+        denyButtonText: "Tutup",
+        icon: "error",
+        text: "Gagal mendapatkan komentar lainnya. Periksa koneksi internet anda.",
+      });
     });
   }
 }

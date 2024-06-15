@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import { initializeApp, getApps } from "firebase/app";
 import $ from "jquery";
+import Swal from "sweetalert2";
 import { firebaseConfig } from "../Auth/FirebaseSetup.js";
 
 function afterRenderAct() {
@@ -15,6 +16,7 @@ function afterRenderAct() {
   document.querySelector(".pizza-loader-container").style.backgroundColor = "transparent";
   document.querySelector(".pizza-loader-container").style.backdropFilter = "brightness(0.5)";
 }
+
 class LoginController {
   static currentUser = { isSignedIn: false };
 
@@ -28,68 +30,93 @@ class LoginController {
     }
     const auth = getAuth();
     onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const {
-          displayName: authDisplayName, uid: authUID, email: authEmail, photoURL: authPhotoURL,
-        } = user;
-        if (this.isCore) {
-          $.post(
-            `${process.env.API_ENDPOINT}/api/auth`,
-            {
-              uid: authUID,
-              email: authEmail,
-              name: authDisplayName,
-              profilePicture: authPhotoURL,
-            },
-            (response) => {
-              const {
-                details: {
-                  id: responseID,
-                  profilePicture: responseProfilePicture,
-                  name: responseName,
-                  uid: responseUID,
-                  email: responseEmail,
-                },
-              } = response;
-              LoginController.currentUser = {
-                isSignedIn: true,
-                userData: {
-                  defaultProfilePicture: authPhotoURL,
-                  id_user: responseID,
-                  profilePicture: responseProfilePicture,
-                  displayName: responseName,
-                  uid: responseUID,
-                  email: responseEmail,
-                },
-              };
+      if (this.isCore) {
+        if (user) {
+          const {
+            displayName: authDisplayName, uid: authUID, email: authEmail, photoURL: authPhotoURL,
+          } = user;
+          if (this.isCore) {
+            $.post(
+              `${process.env.API_ENDPOINT}/api/auth`,
+              {
+                uid: authUID,
+                email: authEmail,
+                name: authDisplayName,
+                profilePicture: authPhotoURL,
+              },
+              (response) => {
+                const {
+                  message,
+                  details: {
+                    id: responseID,
+                    profilePicture: responseProfilePicture,
+                    name: responseName,
+                    uid: responseUID,
+                    email: responseEmail,
+                  },
+                } = response;
+                LoginController.currentUser = {
+                  isSignedIn: true,
+                  userData: {
+                    defaultProfilePicture: authPhotoURL,
+                    id_user: responseID,
+                    profilePicture: responseProfilePicture,
+                    displayName: responseName,
+                    uid: responseUID,
+                    email: responseEmail,
+                  },
+                };
 
-              localStorage.setItem("currentUser", JSON.stringify(LoginController.currentUser));
+                localStorage.setItem("currentUser", JSON.stringify(LoginController.currentUser));
 
-              const signinEvent = new CustomEvent("user-signed-in", {
-                detail: LoginController.currentUser,
+                const signinEvent = new CustomEvent("user-signed-in", {
+                  detail: LoginController.currentUser,
+                });
+
+                document.body.dispatchEvent(signinEvent);
+                Swal.fire({
+                  timer: 3000,
+                  title: message,
+                  icon: "success",
+                  position: "top-end",
+                  toast: true,
+                  showConfirmButton: false,
+                });
+                afterRenderAct();
+              },
+            ).fail(() => {
+              Swal.fire({
+                timer: 3000,
+                title: "Gagal melakukan otentikasi.",
+                icon: "error",
+                position: "top-end",
+                toast: true,
+                showConfirmButton: false,
               });
-
-              document.body.dispatchEvent(signinEvent);
-              afterRenderAct();
-            },
-          ).fail((jqXHR, textStatus, errorThrown) => {
-          });
-        }
-      } else {
-        if (this.isCore) {
+            });
+          }
+        } else {
           LoginController.currentUser = {
             isSignedIn: false,
             userData: null,
           };
+          localStorage.setItem("currentUser", JSON.stringify(LoginController.currentUser));
+
+          const signoutEvent = new CustomEvent("user-signed-out", {
+            detail: LoginController.currentUser,
+          });
+
+          document.body.dispatchEvent(signoutEvent);
+          Swal.fire({
+            timer: 3000,
+            title: "Anda telah berhasil logout.",
+            icon: "success",
+            position: "top-end",
+            toast: true,
+            showConfirmButton: false,
+          });
+          afterRenderAct();
         }
-        localStorage.setItem("currentUser", JSON.stringify(LoginController.currentUser));
-
-        const signoutEvent = new CustomEvent("user-signed-out", {
-          detail: LoginController.currentUser,
-        });
-
-        document.body.dispatchEvent(signoutEvent);
-        afterRenderAct();
       }
     });
   }
@@ -108,8 +135,15 @@ class LoginController {
       }
     } catch (error) {
       const {
-        code, message, email, credential,
+        code, message, /* email, credential, */
       } = error;
+      Swal.fire({
+        title: `Error ${code}`,
+        text: message,
+        icon: "error",
+        showDenyButton: true,
+        denyButtonText: "Tutup",
+      });
     }
   }
 
@@ -118,6 +152,16 @@ class LoginController {
     try {
       await signOut(auth);
     } catch (error) {
+      const {
+        code, message, /* email, credential, */
+      } = error;
+      Swal.fire({
+        title: `Error ${code}`,
+        text: message,
+        icon: "error",
+        showDenyButton: true,
+        denyButtonText: "Tutup",
+      });
     }
   }
 }

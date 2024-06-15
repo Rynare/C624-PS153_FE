@@ -1,4 +1,5 @@
 // eslint-disable-next-line import/named
+import Swal from "sweetalert2";
 import { App } from "./app/App.js";
 import { LoginController } from "./app/controller/LoginController.js";
 import { ProfileController } from "./app/controller/ProfileController.js";
@@ -21,7 +22,21 @@ document.addEventListener("DOMContentLoaded", () => {
     loginBtn.addEventListener("click", googleOAuth.doSignin);
   });
   logoutBtns.forEach((logoutBtn) => {
-    logoutBtn.addEventListener("click", googleOAuth.doSignout);
+    logoutBtn.addEventListener("click", () => {
+      Swal.fire({
+        title: "Konfirmasi",
+        text: "Apakah kamu ingin keluar?",
+        showCancelButton: true,
+        confirmButtonText: "Keluar",
+        cancelButtonText: "Batal",
+        cancelButtonColor: "#28a745",
+        confirmButtonColor: "#dc3545",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          googleOAuth.doSignout();
+        }
+      });
+    });
   });
 
   document.body.addEventListener("user-signed-in", (evt) => {
@@ -45,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const img = profilePictureElem.querySelector("img");
       img.setAttribute("src", `${profilePicture}`);
       img.addEventListener("error", () => {
-        img.setAttribute("src", "/public/img/defaultProfilePicture.png");
+        img.setAttribute("src", "/public/img/defaultProfilePicture.webp");
       });
     });
   });

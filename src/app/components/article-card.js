@@ -39,7 +39,7 @@ class ArticleCard extends HTMLDivElement {
     } = JSON.parse(this.getAttribute("json-data"));
     this.querySelector(".article-thumbnail").setAttribute("src", thumbnail);
     this.querySelector(".article-thumbnail").addEventListener("error", () => {
-      this.querySelector(".article-thumbnail").setAttribute("src", "/public/img/img-not-found.png");
+      this.querySelector(".article-thumbnail").setAttribute("src", "/public/img/img-not-found.webp");
     });
 
     this.querySelector(".article-likes span").textContent = `${numberToNotation(likes)} Like`;

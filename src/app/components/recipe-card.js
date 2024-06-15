@@ -58,7 +58,7 @@ class RecipeCard extends HTMLDivElement {
     this.querySelector(".recipe-name").textContent = title;
     this.querySelector(".recipe-thumbnail").setAttribute("src", thumbnail);
     this.querySelector(".recipe-thumbnail").addEventListener("error", () => {
-      this.querySelector(".recipe-thumbnail").setAttribute("src", "/public/img/img-not-found.png");
+      this.querySelector(".recipe-thumbnail").setAttribute("src", "/public/img/img-not-found.webp");
     });
 
     let timeText = "";

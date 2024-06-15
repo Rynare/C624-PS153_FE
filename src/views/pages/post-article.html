@@ -9,8 +9,8 @@
         <div class="mb-3 new-thumbnail-wrapper">
             <label for="new-thumbnail" class="form-label">Thumbnail <span class="badge text-bg-danger">max:
                     2mb</span></label>
-            <input type="file" id="new-thumbnail" name="thumbnail" accept="image/jpeg, image/jpg, image/webp" size=""
-                class="form-control ms-2">
+            <input type="file" id="new-thumbnail" name="thumbnail" accept="image/jpeg, image/jpg, image/webp"
+                max-size="2" class="form-control ms-2" is="input-file">
             <div class="invalid-feedback"></div>
         </div>
         <div class="preview-container mb-3">
@@ -35,6 +35,7 @@
                 </button>
                 <div class="invalid-feedback" id="slug-validation-feedback"></div>
             </div>
+            <div class="form-text">Tekan icon sidik jadi untuk mengecek slug</div>
         </div>
         <div class="mb-3 new-category-wrapper">
             <label for="new-kategori" class="form-label">Kategori</label>

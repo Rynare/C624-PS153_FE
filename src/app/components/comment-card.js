@@ -37,7 +37,7 @@ class CommentCard extends HTMLDivElement {
     this.querySelector(".comment-msg").innerHTML = msg;
     this.querySelector("picture img").setAttribute("src", profilePicture);
     this.querySelector("picture img").addEventListener("error", () => {
-      this.querySelector("picture img").setAttribute("src", "/public/img/defaultProfilePicture.png");
+      this.querySelector("picture img").setAttribute("src", "/public/img/defaultProfilePicture.webp");
     });
   }
 

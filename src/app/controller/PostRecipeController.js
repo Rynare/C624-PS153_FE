@@ -77,46 +77,58 @@ class PostRecipeController extends Controller {
       if ((slug?.trim()?.length || 0) <= 0) {
         slugElem.classList.add("is-invalid");
         feedback.textContent = "Slug tidak boleh kosong.";
+        slugElem.focus();
         return false;
       }
       const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
       if (!slugRegex.test(slug)) {
         slugElem.classList.add("is-invalid");
         feedback.textContent = "Slug tidak valid. Aturan: tidak boleh mengandung huruf besar, tidak boleh diawali dan diakhiri tanda hubung(-), tidak mengandung underscore ( _ ), tidak boleh terdapat spasi, tidak boleh terdapat tanda hubung berturut (cara--memasak--ayam)";
+        slugElem.focus();
         return false;
       }
       try {
+        document.querySelector(".spinner-loader-container").classList.remove("d-none");
         const response = await fetch(`${process.env.API_ENDPOINT}/api/recipe-check-slug/${slug}`);
         const data = await response.json();
         const { isValid, message } = data;
         if (!isValid) {
           slugElem.classList.add("is-invalid");
           feedback.textContent = message;
+          slugElem.focus();
         } else {
           slugElem.classList.remove("is-invalid");
           slugElem.classList.add("is-valid");
           feedback.textContent = "";
         }
+        document.querySelector(".spinner-loader-container").classList.add("d-none");
         return isValid;
       } catch (error) {
         slugElem.classList.add("is-invalid");
         feedback.textContent = "Slug tidak tersedia.";
+        slugElem.focus();
+        document.querySelector(".spinner-loader-container").classList.add("d-none");
         return false;
       }
     }
+
+    let isWaitingFormSubmit = false;
 
     const form = document.querySelector(".post-recipe form");
     form.addEventListener("submit", async (evt) => {
       evt.preventDefault();
       const formdata = new FormData(form);
-      if (await isNewPostValid(formdata)) {
+      if (await isNewPostValid(formdata) && !isWaitingFormSubmit) {
+        isWaitingFormSubmit = true;
+        document.querySelector(".spinner-loader-container").classList.remove("d-none");
         const { userData: { id_user: userID, uid, email } } = LoginController.currentUser;
         formdata.append("description", quill.root.innerHTML);
         formdata.append("email", email);
         formdata.append("uid", uid);
         formdata.append("id_user", userID);
-        formdata.set("tips", makeStringifiedArrayFromFormData(formdata.get("tips")));
-        formdata.set("tags", makeStringifiedArrayFromFormData(formdata.get("tags")));
+        if (formdata.get("tips")) { formdata.set("tips", makeStringifiedArrayFromFormData(formdata.get("tips"))); } else { formdata.delete("tips"); }
+        if (formdata.get("tags")) { formdata.set("tags", makeStringifiedArrayFromFormData(formdata.get("tags"))); } else { formdata.delete("tags"); }
+        if (!formdata.get("calories")) formdata.delete("calories");
         formdata.set("steps", makeStringifiedArrayFromFormData(formdata.get("steps")));
         formdata.set("ingredients", makeStringifiedArrayFromFormData(formdata.get("ingredients")));
         $.ajax({
@@ -126,13 +138,32 @@ class PostRecipeController extends Controller {
           processData: false,
           contentType: false,
           success(response) {
-            const { status, results } = response;
+            const { status /* results */ } = response;
             if (status) {
+              Swal.fire({
+                icon: "success",
+                title: "Horeee...",
+                text: "Resepmu berhasil diunggah.",
+                showConfirmButton: true,
+                confirmButtonText: "OK",
+              });
             }
+            document.querySelector(".spinner-loader-container").classList.add("d-none");
+            isWaitingFormSubmit = false;
           },
-          error(jqXHR, textStatus, errorThrown) {
-          },
-        }).fail((error) => {
+          // error(jqXHR, textStatus, errorThrown) {
+          // },
+        }).fail((errorResponse) => {
+          document.querySelector(".spinner-loader-container").classList.add("d-none");
+          isWaitingFormSubmit = false;
+          Swal.fire({
+            text: errorResponse?.error?.error_status || errorResponse.message || "Gagal mengunggah resep. Periksa koneksi internet anda.",
+            title: "Error",
+            icon: "error",
+            showConfirmButton: false,
+            showDenyButton: true,
+            denyButtonText: "Tutup",
+          });
         });
       }
     });

@@ -1,4 +1,5 @@
 import $ from "jquery";
+import Swal from "sweetalert2";
 import { Controller } from "./Controller.js";
 import { LoginController } from "./LoginController.js";
 import { App } from "../App.js";
@@ -60,6 +61,14 @@ class LikedController extends Controller {
         //   if (!this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/recipes/page/${this._currentPage}`;
         //   if (this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/recipes/search/${this._keyword}/${this._currentPage}`;
         }
+      }).fail((errorResponse) => {
+        Swal.fire({
+          title: "Error",
+          showDenyButton: true,
+          denyButtonText: "Tutup",
+          icon: "error",
+          text: errorResponse?.error?.error_status || "Gagal memuat daftar resep yang anda sukai. Periksa koneksi internet anda.",
+        });
       });
     };
 
@@ -136,6 +145,14 @@ class LikedController extends Controller {
           //   if (!this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/recipes/page/${this._currentPage}`;
           //   if (this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/recipes/search/${this._keyword}/${this._currentPage}`;
         }
+      }).fail((errorResponse) => {
+        Swal.fire({
+          title: "Error",
+          showDenyButton: true,
+          denyButtonText: "Tutup",
+          icon: "error",
+          text: errorResponse?.error?.error_status || "Gagal memuat daftar artikel yang anda sukai. Periksa koneksi internet anda.",
+        });
       });
     };
 
