@@ -60,3 +60,87 @@ body #app tags.tagify.direction-column.list-style-number tag .tagify__tag__remov
     margin-top: 5px;
     padding-left: 16px;
 }
+
+.fancy-tagify-row tags {
+    --tag-bg: #0052BF;
+    --tag-hover: #CE0078;
+    --tag-text-color: #FFF;
+    --tags-border-color: silver;
+    --tag-text-color--edit: #111;
+    --tag-remove-bg: var(--tag-hover);
+    --tag-pad: 5px 15px 8px 15px;
+    --tag-inset-shadow-size: 1.4em;
+    /* compensate for the larger --tag-pad value */
+    --tag-remove-btn-color: white;
+    --tag-remove-btn-bg--hover: black;
+
+    display: flex;
+    min-width: 0;
+    border: none;
+    padding: 10px 5px 6px 7px;
+}
+
+.fancy-tagify-row tags .tagify__tag {
+    margin-top: 0;
+}
+
+.fancy-tagify-row tags .tagify__tag>div {
+    border-radius: 25px;
+}
+
+.fancy-tagify-row tags .tagify__tag:not(:only-of-type):not(.tagify__tag--editable):hover .tagify__tag-text {
+    margin-inline-end: 15px;
+}
+
+/* Do not show the "remove tag" (x) button when only a single tag remains */
+.fancy-tagify-row tags .tagify__tag:only-of-type .tagify__tag__removeBtn {
+    display: none;
+}
+
+.fancy-tagify-row tags .tagify__tag__removeBtn {
+    opacity: 0;
+    transform: translateX(-100%) scale(.5);
+    margin-inline: -20px 6px;
+    /* very specific on purpose  */
+    text-align: right;
+    transition: .12s;
+}
+
+.fancy-tagify-row tags .tagify__tag:not(.tagify__tag--editable):hover .tagify__tag__removeBtn {
+    transform: none;
+    opacity: 1;
+    height: 20px;
+    position: absolute;
+    aspect-ratio: 1 / 1;
+    right: 0;
+    width: auto;
+    z-index: 1;
+}
+
+.fancy-tagify-row tags+button {
+    color: #0052BF;
+    font: bold 1.4em/1.65 Arial;
+    border: 0;
+    background: none;
+    box-shadow: 0 0 0 2px inset currentColor;
+    border-radius: 50%;
+    width: 1.65em;
+    height: 1.65em;
+    cursor: pointer;
+    outline: none;
+    transition: .1s ease-out;
+    margin: 0 0 0 5px;
+    vertical-align: top;
+}
+
+.fancy-tagify-row tags+button:hover {
+    box-shadow: 0 0 0 5px inset currentColor;
+}
+
+.fancy-tagify-row tags .tagify__input {
+    border-bottom: 1px solid blue;
+    caret-color: white;
+    color: white;
+    margin-left: 20px;
+    flex-grow: 1;
+}
