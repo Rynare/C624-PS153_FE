@@ -26,3 +26,8 @@
     color: grey;
     margin-left: 1rem;
 }
+
+:is(.post-article, .post-recipe) .required::after {
+    content: " *";
+    color: red;
+}

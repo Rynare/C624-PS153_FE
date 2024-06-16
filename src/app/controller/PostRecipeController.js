@@ -52,23 +52,48 @@ class PostRecipeController extends Controller {
     });
 
     async function isNewPostValid(theFormData) {
-      const isValidTitle = theFormData.get("title").trim().length >= 1;
-      if (!isValidTitle) {
-        document.querySelector(".post-recipe .new-title-wrapper input").classList.add("is-invalid");
-        document.querySelector(".post-recipe .new-title-wrapper input").classList.remove("is-valid");
-        document.querySelector(".post-recipe .new-title-wrapper .invalid-feedback").textContent = "Judul tidak boleh kosong.";
-      } else {
-        document.querySelector(".post-recipe .new-title-wrapper input").classList.add("is-valid");
-        document.querySelector(".post-recipe .new-title-wrapper input").classList.remove("is-invalid");
+      const template = document.createElement("template");
+      let isValid = true;
+      function createErrorMsg(msg, callback = () => { }) {
+        isValid = false;
+        const div = document.createElement("div");
+        div.textContent = msg;
+        callback();
+        return div;
       }
+      const isValidTitle = theFormData.get("title").trim().length >= 1;
       const isValidSlug = await isSlugAvailable(theFormData.get("slug"));
       const isValidDesc = quill.getText().trim().length >= 1;
+
+      if (!isValidTitle) template.content.appendChild(createErrorMsg("Judul tidak boleh kosong."));
+      if (!isValidSlug) template.content.appendChild(createErrorMsg("Slug tidak valid."));
+      if ((theFormData.get("duration")?.length || 0) <= 0) template.content.appendChild(createErrorMsg("Anda belum memasukkan durasi memasak."));
       if (!isValidDesc) {
-        document.querySelector(".post-recipe .new-description-wrapper #new-description").classList.add(["border", "border-danger"]);
-      } else {
-        document.querySelector(".post-recipe .new-description-wrapper #new-description").classList.remove(["border", "border-danger"]);
+        template.content.appendChild(createErrorMsg("Deskripsi singkat tidak boleh kosong", () => {
+          if (!isValidDesc) {
+            document.querySelector(".post-recipe .new-description-wrapper #new-description").classList.add(...["border-2", "border", "border-danger"]);
+            document.querySelector(".post-recipe .new-description-wrapper #new-description").focus();
+          } else {
+            document.querySelector(".post-recipe .new-description-wrapper #new-description").classList.remove(...["border-2", "border", "border-danger"]);
+          }
+        }));
       }
-      return isValidSlug && isValidTitle && isValidDesc;
+      if ((theFormData.get("difficulty")?.length || 0) <= 0) template.content.appendChild(createErrorMsg("Anda belum memasukkan tingkat kesulitan masakan ini."));
+      if ((+(theFormData.get("portion")) || 0) <= 0 && ((+(theFormData.get("portion") || 0) >= 11))) template.content.appendChild(createErrorMsg("Masukkan porsi untuk resep ini. minimal 1 porsi dan maksimal 10 porsi"));
+      if (JSON.parse(theFormData.get("ingredients")).length <= 0) template.content.appendChild(createErrorMsg("Bahan-bahan tidak boleh kosong."));
+      if (JSON.parse(theFormData.get("steps")).length <= 0) template.content.appendChild(createErrorMsg("Langkah-langkah tidak boleh kosong."));
+
+      if (!isValid) {
+        Swal.fire({
+          showConfirmButton: false,
+          showDenyButton: true,
+          denyButtonText: "Lengkapi",
+          title: "Data tidak lengkap.",
+          html: template.innerHTML,
+          icon: "warning",
+        });
+      }
+      return isValid;
     }
 
     async function isSlugAvailable(slug) {
@@ -118,19 +143,20 @@ class PostRecipeController extends Controller {
     form.addEventListener("submit", async (evt) => {
       evt.preventDefault();
       const formdata = new FormData(form);
+      formdata.append("description", quill.root.innerHTML);
+      formdata.set("tips", makeStringifiedArrayFromFormData(formdata.get("tips")));
+      formdata.set("tags", makeStringifiedArrayFromFormData(formdata.get("tags")));
+      formdata.set("steps", makeStringifiedArrayFromFormData(formdata.get("steps")));
+      formdata.set("ingredients", makeStringifiedArrayFromFormData(formdata.get("ingredients")));
+      if (!formdata.get("calories")) formdata.delete("calories");
+
       if (await isNewPostValid(formdata) && !isWaitingFormSubmit) {
         isWaitingFormSubmit = true;
         document.querySelector(".spinner-loader-container").classList.remove("d-none");
         const { userData: { id_user: userID, uid, email } } = LoginController.currentUser;
-        formdata.append("description", quill.root.innerHTML);
         formdata.append("email", email);
         formdata.append("uid", uid);
         formdata.append("id_user", userID);
-        if (formdata.get("tips")) { formdata.set("tips", makeStringifiedArrayFromFormData(formdata.get("tips"))); } else { formdata.delete("tips"); }
-        if (formdata.get("tags")) { formdata.set("tags", makeStringifiedArrayFromFormData(formdata.get("tags"))); } else { formdata.delete("tags"); }
-        if (!formdata.get("calories")) formdata.delete("calories");
-        formdata.set("steps", makeStringifiedArrayFromFormData(formdata.get("steps")));
-        formdata.set("ingredients", makeStringifiedArrayFromFormData(formdata.get("ingredients")));
         $.ajax({
           url: `${process.env.API_ENDPOINT}/api/recipe`,
           type: "POST",
@@ -169,9 +195,13 @@ class PostRecipeController extends Controller {
     });
 
     function makeStringifiedArrayFromFormData(field) {
-      const fieldArrObj = JSON.parse(field);
-      const valuesArray = fieldArrObj.map((item) => item.value);
-      return JSON.stringify(valuesArray);
+      try {
+        const fieldArrObj = JSON.parse(field);
+        const valuesArray = fieldArrObj.map((item) => item.value);
+        return JSON.stringify(valuesArray);
+      } catch (error) {
+        return JSON.stringify([]);
+      }
     }
 
     ["ingredients", "steps", "tips", "tags"].forEach((inputField) => {
@@ -187,14 +217,16 @@ class PostRecipeController extends Controller {
 
     document.getElementById("new-thumbnail").addEventListener("change", (event) => {
       const file = event.target.files[0];
+      const previewImage = document.getElementById("thumbnail-preview");
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          const previewImage = document.getElementById("thumbnail-preview");
           previewImage.src = e.target.result;
           previewImage.style.display = "block";
         };
         reader.readAsDataURL(file);
+      } else {
+        previewImage.src = "./public/img/img-not-found.webp";
       }
     });
 

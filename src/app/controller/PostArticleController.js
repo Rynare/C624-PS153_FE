@@ -87,9 +87,10 @@ class PostArticleController extends Controller {
       const isValidSlug = await isSlugAvailable(theFormData.get("slug"));
       const isValidDesc = quill.getText().trim().length >= 1;
       if (!isValidDesc) {
-        document.querySelector(".post-article .new-description-wrapper #new-description").classList.add(["border", "border-danger"]);
+        document.querySelector(".post-article .new-description-wrapper #new-description").classList.add(...["border-2", "border", "border-danger"]);
+        document.querySelector(".post-article .new-description-wrapper #new-description").focus();
       } else {
-        document.querySelector(".post-article .new-description-wrapper #new-description").classList.remove(["border", "border-danger"]);
+        document.querySelector(".post-article .new-description-wrapper #new-description").classList.remove(...["border-2", "border", "border-danger"]);
       }
       return isValidSlug && isValidTitle && isValidDesc;
     }
@@ -137,14 +138,16 @@ class PostArticleController extends Controller {
 
     document.getElementById("new-thumbnail").addEventListener("change", (event) => {
       const file = event.target.files[0];
+      const previewImage = document.getElementById("thumbnail-preview");
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          const previewImage = document.getElementById("thumbnail-preview");
           previewImage.src = e.target.result;
           previewImage.style.display = "block";
         };
         reader.readAsDataURL(file);
+      } else {
+        previewImage.src = "./public/img/img-not-found.webp";
       }
     });
 

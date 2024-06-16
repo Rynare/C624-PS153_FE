@@ -129,13 +129,7 @@ class LoginController {
       const {
         code, message, /* email, credential, */
       } = error;
-      Swal.fire({
-        title: `Error ${code}`,
-        text: message,
-        icon: "error",
-        showDenyButton: true,
-        denyButtonText: "Tutup",
-      });
+      console.error(code, message);
     }
   }
 
@@ -155,13 +149,7 @@ class LoginController {
       const {
         code, message, /* email, credential, */
       } = error;
-      Swal.fire({
-        title: `Error ${code}`,
-        text: message,
-        icon: "error",
-        showDenyButton: true,
-        denyButtonText: "Tutup",
-      });
+      console.error(code, message);
     }
   }
 }

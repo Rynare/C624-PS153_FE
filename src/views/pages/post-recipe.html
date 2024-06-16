@@ -7,7 +7,8 @@
     </div>
     <form action="" class="text-white rounded p-2 px-3 mx-auto" enctype="multipart/form-data">
         <div class="mb-3 new-thumbnail-wrapper">
-            <label for="new-thumbnail" class="form-label">Thumbnail <span class="badge text-bg-danger">max:
+            <label for="new-thumbnail" class="form-label required">Thumbnail&nbsp;<span
+                    class="badge text-bg-danger">max:
                     2mb</span></label>
             <input type="file" id="new-thumbnail" name="thumbnail" class="form-control ms-2" required is="input-file"
                 accept="image/jpeg, image/jpg, image/webp" max-size="2">
@@ -16,20 +17,22 @@
         <div class="preview-container mb-3">
             <div style="width: 100%; aspect-ratio: 3/2;"
                 class="d-flex align-items-center justify-content-center bg-secondary">
-                <img id="thumbnail-preview" src="" alt="Image Preview" style="max-width: 100%;max-height: 100%;">
+                <img id="thumbnail-preview" src="./public/img/img-not-found.webp" alt="Image Preview"
+                    style="max-width: 100%;max-height: 100%;">
             </div>
         </div>
         <div class="mb-3 new-title-wrapper">
-            <label for="new-title" class="form-label">Judul</label>
+            <label for="new-title" class="form-label required">Judul</label>
             <input type="text" class="form-control ms-2" name="title" id="new-title"
-                placeholder="Masukkan judul yang menarik..." required>
+                placeholder="Masukkan judul yang menarik..." required maxlength="60">
             <div class="invalid-feedback"></div>
         </div>
         <div class="mb-3 new-slug-wrapper">
-            <label for="new-slug" class="form-label">Slug</label>
+            <label for="new-slug" class="form-label required">Slug</label>
             <div class="input-group has-validation">
                 <input type="text" class="form-control ms-2 z-1" name="slug" id="new-slug"
-                    placeholder="ini-adalah-contoh-slug..." aria-describedby="slug-validation-feedback" required>
+                    placeholder="ini-adalah-contoh-slug..." aria-describedby="slug-validation-feedback" required
+                    maxlength="100">
                 <button type="button" class="btn btn-secondary check-slug-btn">
                     <i class="bi bi-fingerprint"></i>
                 </button>
@@ -38,7 +41,7 @@
             <div class="form-text">Tekan icon sidik jadi untuk mengecek slug</div>
         </div>
         <div class="mb-3 new-duration-wrapper">
-            <label for="new-duration" class="form-label">Durasi memasak</label>
+            <label for="new-duration" class="form-label required">Durasi memasak</label>
             <select class="form-select text-capitalize ms-2" aria-label="Pilih durasi memasak" name="duration"
                 id="new-duration" required>
                 <option selected hidden disabled>Pilih durasi memasak</option>
@@ -50,14 +53,14 @@
             <div class="invalid-feedback"></div>
         </div>
         <div class="mb-3 new-description-wrapper">
-            <label for="new-description" class="form-label">Deskripsi singkat</label>
+            <label for="new-description" class="form-label required">Deskripsi singkat</label>
             <div class="bg-white rounded overflow-hidden ms-2">
                 <div id="new-description" class="text-black"></div>
             </div>
             <div class="invalid-feedback"></div>
         </div>
         <div class="mb-3 new-difficulty-wrapper">
-            <div class="form-label">Tingkat kesulitan</div>
+            <div class="form-label required">Tingkat kesulitan</div>
             <div class="ms-2 me-3 d-inline-block">
                 <input class="form-check-input" type="radio" name="difficulty" required id="new-difficulty-easy"
                     value="easy">
@@ -81,16 +84,16 @@
             <div class="invalid-feedback"></div>
         </div>
         <div class="mb-3 new-portion-wrapper">
-            <label for="new-portion" class="form-label">Porsi</label>
+            <label for="new-portion" class="form-label required">Porsi</label>
             <input type="number" name="portion" id="new-portion" class="form-control ms-2" inputmode="numeric" min="1"
                 max="10" required>
             <div class="form-text">Min: 1 , Max: 10</div>
             <div class="invalid-feedback"></div>
         </div>
         <div class="mb-3 new-ingredients-wrapper">
-            <label for="new-ingredients" class="form-label">Bahan-bahan</label>
+            <label for="new-ingredients" class="form-label required">Bahan-bahan</label>
             <input type="text" name="ingredients" id="new-ingredients"
-                class="form-control ms-2 direction-column list-style-number" required>
+                class="form-control ms-2 direction-column list-style-number">
             <div class="form-text">Tekan enter untuk menambahkan bahan lainnya</div>
             <div class="invalid-feedback"></div>
         </div>
@@ -101,9 +104,8 @@
             <div class="invalid-feedback"></div>
         </div>
         <div class="mb-3 new-steps-wrapper">
-            <label for="new-steps" class="form-label">Langkah-langkah</label>
-            <input type="text" name="steps" id="new-steps" class="form-control ms-2 direction-column list-style-number"
-                required>
+            <label for="new-steps" class="form-label required">Langkah-langkah</label>
+            <input type="text" name="steps" id="new-steps" class="form-control ms-2 direction-column list-style-number">
             <div class="form-text">Tekan enter untuk menambahkan langkah lainnya</div>
             <div class="invalid-feedback"></div>
         </div>
