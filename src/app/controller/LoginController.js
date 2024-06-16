@@ -107,14 +107,6 @@ class LoginController {
           });
 
           document.body.dispatchEvent(signoutEvent);
-          Swal.fire({
-            timer: 3000,
-            title: "Anda telah berhasil logout.",
-            icon: "success",
-            position: "top-end",
-            toast: true,
-            showConfirmButton: false,
-          });
           afterRenderAct();
         }
       }
@@ -151,6 +143,14 @@ class LoginController {
     const auth = getAuth();
     try {
       await signOut(auth);
+      Swal.fire({
+        timer: 3000,
+        title: "Anda telah berhasil logout.",
+        icon: "success",
+        position: "top-end",
+        toast: true,
+        showConfirmButton: false,
+      });
     } catch (error) {
       const {
         code, message, /* email, credential, */
