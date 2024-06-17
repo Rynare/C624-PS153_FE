@@ -69,6 +69,7 @@ class ProfileController {
                 icon: "success",
                 position: "top-end",
                 toast: true,
+                showCloseButton: true,
                 showConfirmButton: false,
               });
             }
@@ -81,6 +82,7 @@ class ProfileController {
             title: errorResponse?.error?.error_status || errorResponse.message || "Gagal memberikan komentar. Periksa koneksi internet anda.",
             icon: "error",
             position: "top-end",
+            showCloseButton: true,
             toast: true,
             showConfirmButton: false,
           });
@@ -159,6 +161,7 @@ class ProfileController {
             icon: "error",
             position: "top-end",
             toast: true,
+            showCloseButton: true,
             showConfirmButton: false,
           });
         });

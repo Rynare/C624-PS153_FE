@@ -211,6 +211,7 @@ class KulinerController extends Controller {
                     Swal.fire({
                       showConfirmButton: false,
                       toast: true,
+                      showCloseButton: true,
                       position: "top-end",
                       timer: 3000,
                       icon: "success",

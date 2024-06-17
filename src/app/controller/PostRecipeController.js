@@ -241,6 +241,9 @@ class PostRecipeController extends Controller {
         html: elementStr,
       });
     });
+    document.querySelector(".post-recipe .new-title-wrapper input").addEventListener("input", (evt) => {
+      document.querySelector(".post-recipe .new-slug-wrapper input").value = evt.target.value.replaceAll(" ", "-").toLowerCase();
+    });
   }
 }
 

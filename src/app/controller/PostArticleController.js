@@ -163,6 +163,10 @@ class PostArticleController extends Controller {
       });
     });
 
+    document.querySelector(".post-article .new-title-wrapper input").addEventListener("input", (evt) => {
+      document.querySelector(".post-article .new-slug-wrapper input").value = evt.target.value.replaceAll(" ", "-").toLowerCase();
+    });
+
     let isWaitingFormSubmit = false;
     const form = document.querySelector(".post-article form");
     form.addEventListener("submit", async (evt) => {

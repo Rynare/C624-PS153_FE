@@ -230,6 +230,7 @@ class ResepController extends Controller {
                       position: "top-end",
                       toast: true,
                       timer: 3000,
+                      showCloseButton: true,
                       icon: "success",
                       title: deletedResponse?.message || "Resep berhasil dihapus.",
                     });

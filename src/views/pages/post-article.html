@@ -7,7 +7,7 @@
     </div>
     <form action="" class="text-white rounded p-2 px-3 mx-auto" enctype="multipart/form-data">
         <div class="mb-3 new-thumbnail-wrapper">
-            <label for="new-thumbnail" class="form-label">Thumbnail <span class="badge text-bg-danger">max:
+            <label for="new-thumbnail" class="form-label required">Thumbnail <span class="badge text-bg-danger">max:
                     2mb</span></label>
             <input type="file" id="new-thumbnail" name="thumbnail" accept="image/jpeg, image/jpg, image/webp"
                 max-size="2" class="form-control ms-2" is="input-file">
@@ -21,13 +21,13 @@
             </div>
         </div>
         <div class="mb-3 new-title-wrapper">
-            <label for="new-title" class="form-label">Judul</label>
+            <label for="new-title" class="form-label  required">Judul</label>
             <input type="text" class="form-control ms-2" name="title" id="new-title"
                 placeholder="Masukkan judul yang menarik...">
             <div class="invalid-feedback"></div>
         </div>
         <div class="mb-3 new-slug-wrapper">
-            <label for="new-slug" class="form-label">Slug</label>
+            <label for="new-slug" class="form-label  required">Slug</label>
             <div class="input-group has-validation">
                 <input type="text" class="form-control ms-2 z-1" name="slug" id="new-slug"
                     placeholder="ini-adalah-contoh-slug..." aria-describedby="slug-validation-feedback">
@@ -39,7 +39,7 @@
             <div class="form-text">Tekan icon sidik jadi untuk mengecek slug</div>
         </div>
         <div class="mb-3 new-category-wrapper">
-            <label for="new-kategori" class="form-label">Kategori</label>
+            <label for="new-kategori" class="form-label  required">Kategori</label>
             <select class="form-select text-capitalize ms-2" aria-label="Pilih kategori artikel" name="category"
                 id="new-kategori">
                 <option selected hidden disabled value="uncategorized">Pilih Kategori</option>
@@ -47,7 +47,7 @@
             <div class="invalid-feedback"></div>
         </div>
         <div class="mb-3 new-description-wrapper">
-            <label for="new-description" class="form-label">Artikel</label>
+            <label for="new-description" class="form-label required">Artikel</label>
             <div class="bg-white rounded overflow-hidden ms-2">
                 <div id="new-description" class="text-black"></div>
             </div>

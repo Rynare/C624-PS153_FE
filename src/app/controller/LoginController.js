@@ -81,6 +81,7 @@ class LoginController {
                   position: "top-end",
                   toast: true,
                   showConfirmButton: false,
+                  showCloseButton: true,
                 });
                 afterRenderAct();
               },
@@ -92,6 +93,8 @@ class LoginController {
                 position: "top-end",
                 toast: true,
                 showConfirmButton: false,
+                showCloseButton: true,
+
               });
             });
           }
@@ -144,6 +147,8 @@ class LoginController {
         position: "top-end",
         toast: true,
         showConfirmButton: false,
+        showCloseButton: true,
+
       });
     } catch (error) {
       const {
