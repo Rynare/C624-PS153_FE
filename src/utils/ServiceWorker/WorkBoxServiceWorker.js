@@ -8,6 +8,7 @@ const workBoxServiceWorker = async (path) => {
   try {
     await wb.register();
   } catch (error) {
+    console.error(error);
   }
 };
 
