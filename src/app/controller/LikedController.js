@@ -35,8 +35,8 @@ class LikedController extends Controller {
 
     const heroTitle = document.querySelector(".hero-content-wrapper h2");
     const heroText = document.querySelector(".hero-content-wrapper p");
-    heroTitle.innerHTML = "Qulinery/Resep";
-    heroText.innerHTML = "Bagikan resepmu disini agar mereka tahu nikmatnya masakanmu.";
+    heroTitle.innerHTML = "Qulinery/Resep Disukai";
+    heroText.innerHTML = "";
 
     const renderRecipes = () => {
       const { userData: { uid, id_user: signID, email } } = LoginController.currentUser;
@@ -58,8 +58,8 @@ class LikedController extends Controller {
           this.renderRecipeCards(results);
           if (this._currentPage !== "last") this._currentPage += 1;
           this._currentQuery = `${process.env.API_ENDPOINT}/api/user/liked-recipe/${this._currentPage}`;
-        //   if (!this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/recipes/page/${this._currentPage}`;
-        //   if (this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/recipes/search/${this._keyword}/${this._currentPage}`;
+          //   if (!this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/recipes/page/${this._currentPage}`;
+          //   if (this._isSearching) this._currentQuery = `${process.env.API_ENDPOINT}/api/recipes/search/${this._keyword}/${this._currentPage}`;
         }
       }).fail((errorResponse) => {
         Swal.fire({
@@ -119,8 +119,8 @@ class LikedController extends Controller {
 
     const heroTitle = document.querySelector(".hero-content-wrapper h2");
     const heroText = document.querySelector(".hero-content-wrapper p");
-    heroTitle.innerHTML = "Qulinery/Article";
-    heroText.innerHTML = "Bagikan resepmu disini agar mereka tahu nikmatnya masakanmu.";
+    heroTitle.innerHTML = "Qulinery/Artikel disukai";
+    heroText.innerHTML = "";
 
     const renderArticles = () => {
       const { userData: { uid, id_user: signID, email } } = LoginController.currentUser;

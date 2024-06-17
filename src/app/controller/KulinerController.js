@@ -34,7 +34,7 @@ class KulinerController extends Controller {
 
     const heroTitle = document.querySelector(".hero-content-wrapper h2");
     const heroText = document.querySelector(".hero-content-wrapper p");
-    heroTitle.innerHTML = "Qulinery/Post";
+    heroTitle.innerHTML = "Qulinery/Artikel";
     heroText.innerHTML = "Bagikan cerita tentang pengalaman kulinermu disini.";
 
     const renderArticles = () => {
