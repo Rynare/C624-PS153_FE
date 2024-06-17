@@ -6,10 +6,12 @@ const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const { InjectManifest } = require("workbox-webpack-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const Dotenv = require("dotenv-webpack");
 const ImageminWebpWebpackPlugin = require("imagemin-webp-webpack-plugin");
-const Dotenv = require("dotenv-webpack")
 require("dotenv").config()
 /* eslint-enable */
+
+let isImageMinCalled = false;
 
 module.exports = {
   entry: {
@@ -63,6 +65,7 @@ module.exports = {
   plugins: [
     new Dotenv(),
     new CleanWebpackPlugin(),
+    noRepeatImagemin(),
     new HtmlWebpackPlugin({
       title: process.env.APP_TITLE,
       filename: "index.html",
@@ -103,10 +106,15 @@ module.exports = {
     new InjectManifest({
       swSrc: path.resolve(__dirname, "src/utils/ServiceWorker/InjectManifest.js"),
       swDest: "sw.bundle.js",
-      // maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
+      maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
     }),
     process.env.BUNDLE_ANALYZER === "1" ? new BundleAnalyzerPlugin() : "",
-    new ImageminWebpWebpackPlugin({
+  ],
+};
+function noRepeatImagemin() {
+  if (!isImageMinCalled) {
+    isImageMinCalled = true;
+    return new ImageminWebpWebpackPlugin({
       config: [
         {
           test: /\.(jpe?g|png)/,
@@ -116,6 +124,6 @@ module.exports = {
         },
       ],
       overrideExtension: true,
-    }),
-  ],
-};
+    });
+  }
+}

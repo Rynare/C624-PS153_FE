@@ -215,14 +215,18 @@ class PostRecipeController extends Controller {
       });
     });
 
-    document.getElementById("new-thumbnail").addEventListener("change", (event) => {
+    const previewImageContainer = form.querySelector(".thumbnail-preview-container");
+    const previewImage = previewImageContainer.querySelector("#thumbnail-preview");
+    const thumbnailAttention = form.querySelector(".thumbnail-attention");
+
+    form.querySelector("#new-thumbnail").addEventListener("change", (event) => {
       const file = event.target.files[0];
-      const previewImage = document.getElementById("thumbnail-preview");
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
           previewImage.src = e.target.result;
-          previewImage.style.display = "block";
+          previewImageContainer.classList.remove("d-none");
+          thumbnailAttention.classList.add("d-none");
         };
         reader.readAsDataURL(file);
       } else {
@@ -230,8 +234,10 @@ class PostRecipeController extends Controller {
       }
     });
 
-    document.querySelector("[name=thumbnail]").addEventListener("fileInvalid", (evt) => {
+    form.querySelector("[name=thumbnail]").addEventListener("fileInvalid", (evt) => {
       const { detail } = evt;
+      previewImageContainer.classList.add("d-none");
+      thumbnailAttention.classList.remove("d-none");
       let elementStr = "";
       if (detail?.size) elementStr += `<p>${detail.size}</p>`;
       if (detail?.fileType) elementStr += `<p>${detail.fileType}</p>`;

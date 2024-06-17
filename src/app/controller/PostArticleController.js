@@ -136,33 +136,6 @@ class PostArticleController extends Controller {
       }
     }
 
-    document.getElementById("new-thumbnail").addEventListener("change", (event) => {
-      const file = event.target.files[0];
-      const previewImage = document.getElementById("thumbnail-preview");
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          previewImage.src = e.target.result;
-          previewImage.style.display = "block";
-        };
-        reader.readAsDataURL(file);
-      } else {
-        previewImage.src = "./public/img/img-not-found.webp";
-      }
-    });
-
-    document.querySelector("[name=thumbnail]").addEventListener("fileInvalid", (evt) => {
-      const { detail } = evt;
-      let elementStr = "";
-      if (detail?.size) elementStr += `<p>${detail.size}</p>`;
-      if (detail?.fileType) elementStr += `<p>${detail.fileType}</p>`;
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        html: elementStr,
-      });
-    });
-
     document.querySelector(".post-article .new-title-wrapper input").addEventListener("input", (evt) => {
       document.querySelector(".post-article .new-slug-wrapper input").value = evt.target.value.replaceAll(" ", "-").toLowerCase();
     });
@@ -217,6 +190,39 @@ class PostArticleController extends Controller {
           });
         });
       }
+    });
+
+    const previewImageContainer = form.querySelector(".thumbnail-preview-container");
+    const previewImage = previewImageContainer.querySelector("#thumbnail-preview");
+    const thumbnailAttention = form.querySelector(".thumbnail-attention");
+
+    document.getElementById("new-thumbnail").addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          previewImage.src = e.target.result;
+          previewImageContainer.classList.remove("d-none");
+          thumbnailAttention.classList.add("d-none");
+        };
+        reader.readAsDataURL(file);
+      } else {
+        previewImage.src = "./public/img/img-not-found.webp";
+      }
+    });
+
+    document.querySelector("[name=thumbnail]").addEventListener("fileInvalid", (evt) => {
+      const { detail } = evt;
+      previewImageContainer.classList.add("d-none");
+      thumbnailAttention.classList.remove("d-none");
+      let elementStr = "";
+      if (detail?.size) elementStr += `<p>${detail.size}</p>`;
+      if (detail?.fileType) elementStr += `<p>${detail.fileType}</p>`;
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        html: elementStr,
+      });
     });
   }
 }

@@ -9,16 +9,28 @@
         <div class="mb-3 new-thumbnail-wrapper">
             <label for="new-thumbnail" class="form-label required">Thumbnail&nbsp;<span
                     class="badge text-bg-danger">max:
-                    2mb</span></label>
-            <input type="file" id="new-thumbnail" name="thumbnail" class="form-control ms-2" required is="input-file"
-                accept="image/jpeg, image/jpg, image/webp" max-size="2">
-            <div class="invalid-feedback"></div>
-        </div>
-        <div class="preview-container mb-3">
-            <div style="width: 100%; aspect-ratio: 3/2;"
-                class="d-flex align-items-center justify-content-center bg-secondary">
-                <img id="thumbnail-preview" src="./public/img/img-not-found.webp" alt="Image Preview"
-                    style="max-width: 100%;max-height: 100%;">
+                    2mb</span>
+            </label>
+            <div class="input-drag-field position-relative rounded-2 form-control" style="background-color: #efeef3;">
+                <input type="file" id="new-thumbnail" name="thumbnail"
+                    class="position-absolute opacity-0 top-0 bottom-0 start-0 end-0" required is="input-file"
+                    accept="image/jpeg, image/jpg, image/webp" max-size="2">
+                <div class="rounded-4 overflow-hidden my-1 mx-0 my-sm-4 mx-sm-3 thumbnail-attention"
+                    style="border: 3px dashed #bec0da;">
+                    <div style="width: 100%; aspect-ratio: 3/2;"
+                        class="d-flex align-items-center justify-content-center">
+                        <div class="text-center">
+                            <i class="bi bi-cloud-upload"></i>
+                            <h5>Masukkan thumbnail disini</h5>
+                            <p class="mb-0">Format: .jpg .jpeg .webp</p>
+                            <p class="mb-0">Max: 2MB</p>
+                        </div>
+                    </div>
+                </div>
+                <picture class="d-flex w-100 h-100 thumbnail-preview-container d-none">
+                    <img id="thumbnail-preview" src="./public/img/img-not-found.webp" alt="Image Preview"
+                        style="max-width: 100%;max-height: 100%;" class="m-auto">
+                </picture>
             </div>
         </div>
         <div class="mb-3 new-title-wrapper">

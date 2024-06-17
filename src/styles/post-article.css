@@ -31,3 +31,27 @@
     content: " *";
     color: red;
 }
+
+:is(.post-article, .post-recipe) .thumbnail-attention h5 {
+    font-size: 1rem;
+}
+
+:is(.post-article, .post-recipe) .thumbnail-attention .bi.bi-cloud-upload {
+    font-size: 1.7rem;
+}
+
+@media screen and (min-width: 576px) {
+    :is(.post-article, .post-recipe) .thumbnail-attention .bi.bi-cloud-upload {
+        font-size: 40px;
+    }
+
+    :is(.post-article, .post-recipe) .thumbnail-attention h5 {
+        font-size: 1.25rem;
+    }
+}
+
+:is(.post-article, .post-recipe) .thumbnail-attention .bi.bi-cloud-upload {}
+
+:is(.post-recipe, .post-article) .input-drag-field {
+    aspect-ratio: 3/2;
+}
