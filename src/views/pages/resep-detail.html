@@ -35,65 +35,71 @@
                 provident quos dolorem in vero nihil, deserunt natus, odio voluptate sunt asperiores a quam
                 voluptas.
             </div>
-            <table>
+            <table class="m-auto my-5">
                 <tr>
-                    <td class="pe-3">Durasi pembuatan</td>
+                    <td class="pe-3 fw-bold">Durasi pembuatan</td>
                     <td class="recipe-duration text-capitalize"></td>
                 </tr>
                 <tr>
-                    <td class="pe-3">Kalori</td>
+                    <td class="pe-3 fw-bold">Kalori</td>
                     <td class="recipe-calories text-capitalize"></td>
                 </tr>
                 <tr>
-                    <td class="pe-3">Tingkat kesulitan</td>
+                    <td class="pe-3 fw-bold">Tingkat kesulitan</td>
                     <td class="recipe-difficulty text-capitalize"></td>
                 </tr>
             </table>
             <div class="accordion mt-4" id="accordionExample">
                 <div class="accordion-item">
-                    <h2 class="accordion-header border-2 border-start">
+                    <h2 class="accordion-header border-2 border-start my-2 rounded-end-2">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            <ol start="1">
-                                <li>Bahan-Bahan</li>
-                            </ol>
+                            <div start="1" class="fw-bold">
+                                <div class="ms-3">Bahan-Bahan</div>
+                            </div>
                         </button>
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse show">
-                        <div class="accordion-body">
-                            <p>Bahan bahan dibawah ini untuk sajian <span class="recipe-portion"></span> Porsi</p>
-                            <ul class="recipe-ingredients row row-cols-1 row-cols-sm-3 column-gap-4 text-capitalize">
+                        <div
+                            class="accordion-body my-3 rounded-4 bg-dark mx-1 pe-4 py-4 d-flex flex-wrap column-gap-4 row-cols-1 row-cols-md-2">
+                            <p class="portion-wrapper d-flex flex-column align-items-center justify-content-start p-3 flex-grow-1 text-center"
+                                style="width: min-content;">
+                                <span>Bahan bahan dibawah ini untuk sajian</span>
+                                <span class="recipe-portion"></span>
+                                <span>Porsi</span>
+                            </p>
+                            <ul class="recipe-ingredients text-capitalize flex-grow-1">
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
-                    <h2 class="accordion-header border-2 border-start">
+                    <h2 class="accordion-header border-2 border-start my-2 rounded-end-2">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            <ol start="2">
-                                <li>Tips</li>
-                            </ol>
+                            <div start="2" class="fw-bold">
+                                <div class="ms-3">Tips</div>
+                            </div>
                         </button>
                     </h2>
                     <div id="collapseTwo" class="accordion-collapse collapse">
-                        <div class="accordion-body recipe-tips">
+                        <div class="accordion-body my-3 rounded-4 bg-dark mx-1 pe-4 py-4 recipe-tips">
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
-                    <h2 class="accordion-header border-2 border-start">
+                    <h2 class="accordion-header border-2 border-start my-2 rounded-end-2">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                            <ol start="3">
-                                <li>Cara pengolahan</li>
-                            </ol>
+                            <div start="3" class="fw-bold">
+                                <div class="ms-3">Cara pengolahan</div>
+                            </div>
                         </button>
                     </h2>
                     <div id="collapseThree" class="accordion-collapse collapse">
-                        <div class="accordion-body">
-                            <ul class="recipe-steps">
-                            </ul>
+                        <div class="accordion-body my-3 rounded-4 bg-dark mx-1 pe-4 py-4">
+                            <ol class="recipe-steps" type="1">
+                            </ol>
                         </div>
                     </div>
                 </div>

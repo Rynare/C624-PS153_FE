@@ -70,3 +70,20 @@
     max-width: 800px;
     margin: auto;
 }
+
+.recipe-detail-container .accordion-header {
+    background-color: #3f474f;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+
+.recipe-detail-container .accordion-body {
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+
+.recipe-detail-container .accordion .portion-wrapper .recipe-portion {
+    font-size: 80px;
+}
+
+.recipe-detail-container .accordion .portion-wrapper span:nth-child(3) {
+    font-size: 30px;
+}

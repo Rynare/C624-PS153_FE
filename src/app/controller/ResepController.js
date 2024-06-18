@@ -269,11 +269,11 @@ class ResepController extends Controller {
       `;
       recipeDetailContainer.querySelector(".recipe-portion").textContent = portion;
       recipeDetailContainer.querySelector(".recipe-ingredients").innerHTML = `<li>${ingredients.join("</li><li>")}</li>`;
-      recipeDetailContainer.querySelector(".recipe-steps").innerHTML = `<li>${steps.join("</li><li>")}</li>`;
+      recipeDetailContainer.querySelector(".recipe-steps").innerHTML = `<li class="ps-3">${steps.join("</li><li class='ps-3'>")}</li>`;
       if (tips.length >= 1) {
         recipeDetailContainer.querySelector(".recipe-tips").innerHTML = `<ul><li>${tips.join("</li><li>")}</li></ul>`;
       } else {
-        recipeDetailContainer.querySelector(".recipe-tips").innerHTML = "<p>Tips tidak tersedia.</p>";
+        recipeDetailContainer.querySelector(".recipe-tips").innerHTML = "<p class='my-1'>Tips tidak tersedia.</p>";
       }
       recipeDetailContainer.querySelector(".recipe-tags").innerHTML = `
         <span class="badge text-bg-danger">${tags.join("</span><span class=\"badge text-bg-danger\">")}</span>
