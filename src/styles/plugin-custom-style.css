@@ -49,8 +49,6 @@ body #app tags.tagify.direction-column.list-style-number tag .tagify__tag__remov
 }
 
 .ql-editor.ql-editor-output {
-    width: fit-content;
-    height: fit-content;
     padding: 0;
 }
 
