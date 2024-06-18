@@ -19,8 +19,10 @@ class Controller {
   }
 
   async view(viewUrl) {
+    document.querySelector(".spinner-loader-container").classList.remove("d-none");
     document.body.scrollIntoView({ behavior: "instant" });
     await renderView(viewUrl);
+    document.querySelector(".spinner-loader-container").classList.add("d-none");
   }
 }
 

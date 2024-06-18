@@ -102,11 +102,13 @@ module.exports = {
           yandex: true,
         },
       },
+      logoMaskable: process.env.APP_ICON,
+
     }),
     new InjectManifest({
       swSrc: path.resolve(__dirname, "src/utils/ServiceWorker/InjectManifest.js"),
       swDest: "sw.bundle.js",
-      maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
+      maximumFileSizeToCacheInBytes: 2 * 1024 * 1024,
     }),
     process.env.BUNDLE_ANALYZER === "1" ? new BundleAnalyzerPlugin() : "",
   ],

@@ -1,3 +1,4 @@
+// service-worker.js
 import { precacheAndRoute } from "workbox-precaching";
 import { registerRoute, Route } from "workbox-routing";
 import { StaleWhileRevalidate } from "workbox-strategies";
@@ -10,13 +11,7 @@ function isCacheable(url) {
   const theUrl = url.endsWith("/") ? url : `${url}/`;
   return CacheThisURL.find((cursor) => {
     if (theUrl.startsWith(cursor.host)) {
-      const result = cursor.path.find((path) => {
-        if (theUrl.startsWith(cursor.host + path)) {
-          return true;
-        }
-        return false;
-      });
-      return result;
+      return cursor.path.some((path) => theUrl.startsWith(cursor.host + path));
     }
     return false;
   });
@@ -25,13 +20,13 @@ function isCacheable(url) {
 const backendAPI = new Route(
   ({ url }) => isCacheable(url.href),
   new StaleWhileRevalidate({
-    cacheName: process.env.HOST || `${window.location.protocol}//${window.location.hostname}`,
+    cacheName: process.env.HOST || `${self.location.protocol}//${self.location.hostname}`,
   }),
 );
 
 registerRoute(backendAPI);
 
-self.addEventListener("install", () => {
+self.addEventListener("install", (/* event */) => {
   self.skipWaiting();
 });
 

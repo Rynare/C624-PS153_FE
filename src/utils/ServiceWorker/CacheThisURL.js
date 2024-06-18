@@ -20,4 +20,5 @@ const CacheThisURL = [
     ],
   },
 ];
+
 export { CacheThisURL };
